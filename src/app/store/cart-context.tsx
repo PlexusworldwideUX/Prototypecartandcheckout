@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useCallback, useMemo } from 'react';
+import React, { createContext, useContext, useState, useCallback, useMemo, useEffect } from 'react';
 import defaultContent from './default-content.json';
 import overrides from './content-overrides.json';
 import SUGGESTED_PRODUCTS_TEMPLATE, { type SuggestedProductEntry, type FlavorGroup, type DropdownConfig, type OptionPriceEntry, resolveItemPricePV } from '../data/suggested-products';
@@ -85,6 +85,7 @@ interface CartState {
   userName: string | null;
   authReturnPage: 'cart' | 'checkout';
   orderSnapshot: OrderSnapshot | null;
+  shippingState: string | null;
 }
 
 export interface ShippingInfo {
@@ -131,6 +132,7 @@ interface CartContextType extends CartState {
   getSubtotal: () => number;
   getTotalPV: () => number;
   getShipping: () => number;
+  getTax: () => number;
   getTotal: () => number;
   getVipSavings: () => number;
   getItemCount: () => number;
@@ -144,6 +146,7 @@ interface CartContextType extends CartState {
   logOut: () => void;
   setAuthReturnPage: (page: 'cart' | 'checkout') => void;
   resetCartToDefaults: () => void;
+  setShippingState: (state: string | null) => void;
   // Promo & Voucher
   promoCode: string;
   promoApplied: boolean;
@@ -230,6 +233,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   const [userName, setUserName] = useState<string | null>(null);
   const [authReturnPage, setAuthReturnPage] = useState<'cart' | 'checkout'>('cart');
   const [orderSnapshot, setOrderSnapshot] = useState<OrderSnapshot | null>(null);
+  const [shippingState, setShippingState] = useState<string | null>(null);
   // Promo & Voucher
   const [promoCode, setPromoCode] = useState('');
   const [promoApplied, setPromoApplied] = useState(false);
@@ -402,12 +406,28 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     return productSub === 0 ? 0 : productSub >= 75 ? 0 : 9.99;
   }, [getProductSubtotal]);
 
+  const getTax = useCallback(() => {
+    // Return 0 if no shipping state is set
+    if (!shippingState) return 0;
+    
+    // Tax is calculated on subtotal after promo/voucher discounts
+    const subtotal = getSubtotal();
+    let discountedSubtotal = subtotal;
+    if (promoApplied) discountedSubtotal -= 10;
+    if (voucherApplied) discountedSubtotal -= 10;
+    discountedSubtotal = Math.max(0, discountedSubtotal);
+    return discountedSubtotal * 0.089; // 8.9% tax rate
+  }, [shippingState, getSubtotal, promoApplied, voucherApplied]);
+
   const getTotal = useCallback(() => {
-    let total = getSubtotal() + getShipping();
-    if (promoApplied) total -= 10;
-    if (voucherApplied) total -= 10;
-    return Math.max(0, total);
-  }, [getSubtotal, getShipping, promoApplied, voucherApplied]);
+    let subtotal = getSubtotal();
+    if (promoApplied) subtotal -= 10;
+    if (voucherApplied) subtotal -= 10;
+    subtotal = Math.max(0, subtotal);
+    const tax = getTax();
+    const shipping = getShipping();
+    return subtotal + tax + shipping;
+  }, [getSubtotal, getShipping, getTax, promoApplied, voucherApplied]);
 
   const getVipSavings = useCallback(() => {
     // Savings = effectiveMemberPrice * 0.25 per item (retail is uniformly memberPrice × 1.25)
@@ -554,6 +574,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     userName,
     authReturnPage,
     orderSnapshot,
+    shippingState,
     addMembership,
     removeMembership,
     removeItem,
@@ -572,6 +593,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     getSubtotal,
     getTotalPV,
     getShipping,
+    getTax,
     getTotal,
     getVipSavings,
     getItemCount,
@@ -584,6 +606,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     logOut,
     setAuthReturnPage,
     resetCartToDefaults,
+    setShippingState,
     // Promo & Voucher
     promoCode,
     promoApplied,

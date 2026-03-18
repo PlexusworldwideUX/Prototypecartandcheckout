@@ -241,6 +241,7 @@ export function CheckoutPage() {
     items, priceMultiplier, effectiveMembership, isSignedInMember,
     addMembership, getMembershipPrice,
     voucherCode, voucherApplied, setVoucherCode, setVoucherApplied,
+    setShippingState,
   } = useCart();
   const { get } = useContent();
 
@@ -309,6 +310,7 @@ export function CheckoutPage() {
   const [voucherOpen, setVoucherOpen] = useState(false);
   const [voucherInput, setVoucherInput] = useState(voucherCode);
   const [voucherError, setVoucherError] = useState(false);
+  const [stateError, setStateError] = useState(false);
 
   useEffect(() => {
     if (shippingInfo) {
@@ -344,13 +346,27 @@ export function CheckoutPage() {
     }
   }, []);
 
+  // Watch for membership being added via Order Summary and activate enrollment section
+  useEffect(() => {
+    if (showEnrollment && hasMembership && activeSection !== 'enrollment' && !enrollmentSaved) {
+      setActiveSection('enrollment');
+    }
+  }, [hasMembership, showEnrollment, enrollmentSaved, activeSection]);
+
   const handleShippingSaveAndContinue = () => {
+    // Validate state is not empty
+    if (!sf.state || sf.state.trim() === '') {
+      setStateError(true);
+      return;
+    }
+    setStateError(false);
     setShowAddressModal(true);
   };
 
   const handleAddressVerified = () => {
     setShowAddressModal(false);
     saveShipping(sf);
+    setShippingState(sf.state);
     setShippingSaved(true);
     setActiveSection('payment');
     toast.success('Shipping information saved');
@@ -707,12 +723,15 @@ export function CheckoutPage() {
                         <label style={{ fontSize: '12px', fontWeight: 600, color: '#555', textTransform: 'uppercase', letterSpacing: '0.5px' }}>{get('checkout.stateLabel')}</label>
                         <select
                           value={sf.state}
-                          onChange={e => setSf(p => ({ ...p, state: e.target.value }))}
-                          className="px-3 py-2.5 border border-[#e0e0e0] rounded-lg bg-white focus:outline-none focus:border-[#C8102E]"
+                          onChange={e => { setSf(p => ({ ...p, state: e.target.value })); if (stateError) setStateError(false); }}
+                          className={`px-3 py-2.5 border rounded-lg bg-white focus:outline-none ${stateError ? 'border-[#d32f2f] bg-[#fff5f5]' : 'border-[#e0e0e0] focus:border-[#C8102E]'}`}
                           style={{ fontSize: '14px', fontFamily: "'DM Sans', sans-serif" }}
                         >
                           {US_STATES.map(s => <option key={s} value={s}>{s}</option>)}
                         </select>
+                        {stateError && (
+                          <div className="text-[#d32f2f] mt-1" style={{ fontSize: '12px', fontWeight: 500 }}>Required</div>
+                        )}
                       </div>
                     </div>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 mb-3.5">

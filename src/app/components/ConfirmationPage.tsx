@@ -251,7 +251,7 @@ export function ConfirmationPage() {
           <ET k="confirmation.productsTitle" />
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-          {SUGGESTED_PRODUCTS.map(sp => {
+          {SUGGESTED_PRODUCTS.slice(0, 3).map(sp => {
             const imgKey = `suggested.${sp.id}.image`;
             const nameKey = `suggested.${sp.id}.name`;
             const subtitleKey = `suggested.${sp.id}.subtitle`;

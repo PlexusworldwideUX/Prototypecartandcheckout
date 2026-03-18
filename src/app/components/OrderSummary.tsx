@@ -35,6 +35,7 @@ export function OrderSummary({
     getSubtotal,
     getTotalPV,
     getShipping,
+    getTax,
     getTotal,
     getVipSavings,
     getItemCount,
@@ -47,6 +48,8 @@ export function OrderSummary({
     setPromoApplied,
     voucherCode,
     voucherApplied,
+    shippingState,
+    currentPage,
   } = useCart();
   const { get } = useContent();
 
@@ -54,6 +57,7 @@ export function OrderSummary({
   const subtotal = getSubtotal();
   const totalPV = getTotalPV();
   const shipping = getShipping();
+  const tax = getTax();
   const total = getTotal();
   const vipSavings = getVipSavings();
   const itemCount = getItemCount();
@@ -108,6 +112,9 @@ export function OrderSummary({
       </div>
       )}
 
+      {/* Divider before Subtotal when no PV Total */}
+      {!effectiveMembership && <hr className="border-t border-[#e0e0e0] my-2" />}
+
       {/* Promos & Vouchers section — between PV and Subtotal */}
       {(promoApplied || voucherApplied) && (
         <div className="py-2 my-1">
@@ -141,15 +148,21 @@ export function OrderSummary({
         </span>
       </div>
       <div className="flex justify-between items-baseline mb-2" style={{ fontSize: '14px' }}>
-        <span className="text-[#555]"><ET k="orderSummary.taxLabel" /></span>
-        <span style={{ fontWeight: 500 }}><ET k="orderSummary.taxValue" /></span>
+        <span className="text-[#555]">
+          {shippingState ? `Tax (${shippingState} 8.9%)` : <ET k="orderSummary.taxLabel" />}
+        </span>
+        <span style={{ fontWeight: 500 }}>
+          {shippingState ? `$${tax.toFixed(2)}` : <ET k="orderSummary.taxValue" />}
+        </span>
       </div>
 
       <hr className="border-t border-[#e0e0e0] my-3" />
 
       {/* Total */}
       <div className="flex justify-between items-baseline mb-1">
-        <span style={{ fontSize: '15px', fontWeight: 700 }}><ET k="orderSummary.estimatedTotal" /></span>
+        <span style={{ fontSize: '15px', fontWeight: 700 }}>
+          {currentPage === 'checkout' ? 'Order Total' : <ET k="orderSummary.estimatedTotal" />}
+        </span>
         <span style={{ fontSize: '20px', fontWeight: 800 }}>${total.toFixed(2)}</span>
       </div>
 
@@ -173,7 +186,7 @@ export function OrderSummary({
             fontSize: '13px',
             fontWeight: 600,
             background: '#f3f3f3',
-            color: '#888',
+            color: currentPage === 'checkout' ? '#970F21' : '#3E8040',
             fontFamily: "'DM Sans', sans-serif",
           }}
           onClick={() => addMembership()}
