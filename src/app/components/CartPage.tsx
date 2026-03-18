@@ -330,7 +330,7 @@ export function CartPage() {
                   return (
                     <div
                       key={item.id}
-                      className="bg-white rounded-xl border border-[#e8e8e8] overflow-hidden text-center transition-all hover:-translate-y-0.5 flex flex-col"
+                      className="bg-white rounded-xl border border-[#e8e8e8] overflow-hidden transition-all hover:-translate-y-0.5 flex flex-col"
                     >
                       <div className="w-full aspect-square bg-[#f8f8f8] overflow-hidden">
                         <img
@@ -340,19 +340,18 @@ export function CartPage() {
                         />
                       </div>
                       <div className="p-4 flex flex-col flex-1">
+                        {/* Title + subtitle — left aligned, separated from price */}
                         <div style={{ fontSize: '15px', fontWeight: 600, marginBottom: '2px' }}>{item.name}</div>
-                        <div className="text-[#888] italic mb-3" style={{ fontSize: '12px' }}>{templateEntry?.subtitle || 'Options Available'}</div>
-                        <div className="mt-auto">
+                        <div className="text-[#888] italic" style={{ fontSize: '12px' }}>{templateEntry?.subtitle || 'Options Available'}</div>
+                        {/* Price block — visually separated with top margin */}
+                        <div className="mt-auto pt-4">
                           {effectiveMembership ? (
                             <>
                               <div style={{ fontSize: '20px', fontWeight: 700, color: '#1a1a1a', marginBottom: '2px' }}>
                                 ${cardMemberPrice.toFixed(2)}
                               </div>
-                              <div className="text-[#555] mb-1" style={{ fontSize: '13px', fontWeight: 500 }}>
+                              <div className="text-[#C8102E] mb-3" style={{ fontSize: '13px', fontWeight: 600 }}>
                                 {cardPV} PV
-                              </div>
-                              <div className="line-through text-[#999] mb-3" style={{ fontSize: '14px' }}>
-                                ${cardRetailPrice.toFixed(2)}
                               </div>
                             </>
                           ) : (

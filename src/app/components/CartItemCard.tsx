@@ -68,7 +68,13 @@ export function CartItemCard({
           <div style={{ fontSize: '15px', fontWeight: 600 }}>{item.name}</div>
           <div style={{ fontSize: '13px', color: '#555', marginTop: '1px' }}>{item.subtitle}</div>
 
-          {/* Options toggle button */}
+          {/* Price — left aligned, separated from title block */}
+          <div className="mt-3">
+            <div style={{ fontSize: '16px', fontWeight: 700 }}>${(price * item.qty).toFixed(2)}</div>
+            {hasMembership && (
+              <div className="text-[#888]" style={{ fontSize: '12px', marginTop: '2px' }}>{effectivePV} <ET k="cartItem.pvSuffix" /></div>
+            )}
+          </div>
           {style !== 'none' && (
             <button
               className="flex items-center gap-1 mt-3 bg-transparent border-none p-0 cursor-pointer"
@@ -224,13 +230,6 @@ export function CartItemCard({
           </div>
         </div>
 
-        {/* Price column */}
-        <div className="text-right flex-shrink-0">
-          <div style={{ fontSize: '16px', fontWeight: 700 }}>${(price * item.qty).toFixed(2)}</div>
-          {hasMembership && (
-            <div className="text-[#888]" style={{ fontSize: '12px', marginTop: '2px' }}>{effectivePV} <ET k="cartItem.pvSuffix" /></div>
-          )}
-        </div>
       </div>
 
       {/* Prop65 Warning */}
