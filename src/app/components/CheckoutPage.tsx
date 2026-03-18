@@ -220,11 +220,10 @@ function SectionHeader({ section, number, titleKey, isOpen, suffix, isSaved, onE
       <div className="flex items-center gap-2">
         {isSaved && !isOpen && (
           <button
-            className="flex items-center gap-1 bg-transparent border-none text-[#C8102E] cursor-pointer"
-            style={{ fontSize: '13px', fontWeight: 600 }}
+            className="flex items-center bg-transparent border-none text-[#C8102E] cursor-pointer p-1"
             onClick={(e) => { e.stopPropagation(); onEdit(section); }}
           >
-            <Edit size={15} /> <ET k="checkout.editBtn" />
+            <Edit size={15} />
           </button>
         )}
         {isOpen ? <ChevronUp size={18} className="text-[#999]" /> : <ChevronDown size={18} className="text-[#999]" />}
@@ -255,6 +254,7 @@ export function CheckoutPage() {
   const [enrollmentSaved, setEnrollmentSaved] = useState(false);
   const [shippingSaved, setShippingSaved] = useState(false);
   const [paymentSaved, setPaymentSaved] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
 
   // Address verification modal
   const [showAddressModal, setShowAddressModal] = useState(false);
@@ -368,6 +368,7 @@ export function CheckoutPage() {
     saveShipping(sf);
     setShippingState(sf.state);
     setShippingSaved(true);
+    setIsEditing(false);
     setActiveSection('payment');
     toast.success('Shipping information saved');
   };
@@ -382,20 +383,14 @@ export function CheckoutPage() {
     };
     savePayment(info);
     setPaymentSaved(true);
+    setIsEditing(false);
     setActiveSection('review');
     toast.success('Payment method saved');
   };
 
   const handleEditSection = (section: Section) => {
-    // Save current section if open, then switch
-    if (activeSection === 'enrollment' && !enrollmentSaved) {
-      // Don't auto-save unsaved enrollment
-    } else if (activeSection === 'shipping' && !shippingSaved) {
-      // Don't auto-save unsaved shipping
-    } else if (activeSection === 'payment' && !paymentSaved) {
-      // Don't auto-save unsaved payment
-    }
     setActiveSection(section);
+    setIsEditing(true);
   };
 
   const formatCardInput = (value: string) => {
@@ -416,6 +411,7 @@ export function CheckoutPage() {
 
   const handleEnrollmentSave = () => {
     setEnrollmentSaved(true);
+    setIsEditing(false);
     setActiveSection('shipping');
     toast.success('Enrollment information saved');
   };
@@ -433,8 +429,24 @@ export function CheckoutPage() {
     toast.success('Annual VIP Membership added to your cart!');
   };
 
+  // Sticky button: "Place Order" on review (not editing), "Save and Continue" otherwise
+  const onReviewAndDone = activeSection === 'review' && !isEditing;
+  const stickyLabel = onReviewAndDone ? (get('checkout.placeOrderBtn') || 'Place Order') : 'Save and Continue';
+  const stickyDisabled = onReviewAndDone ? !canPlaceOrder : false;
+
+  const handleStickyBtn = () => {
+    if (onReviewAndDone) {
+      if (canPlaceOrder) setPage('confirmation');
+      return;
+    }
+    if (activeSection === 'enrollment') handleEnrollmentSave();
+    else if (activeSection === 'shipping') handleShippingSaveAndContinue();
+    else if (activeSection === 'payment') handleSavePayment();
+  };
+
   return (
-    <div className="max-w-[1280px] mx-auto px-6 py-8">
+    <>
+    <div className="max-w-[1280px] mx-auto px-6 py-8 pb-28">
       {/* Back to Cart */}
       <button
         className="flex items-center gap-1 bg-transparent border-none text-[#555] cursor-pointer hover:text-[#C8102E] transition-colors mb-4"
@@ -662,13 +674,6 @@ export function CheckoutPage() {
                       </div>
                       </div>{/* end fields container */}
 
-                      <button
-                        className="w-full bg-[#C8102E] text-white py-3 rounded-full border-none cursor-pointer transition-all hover:bg-[#a00d24] mt-4"
-                        style={{ fontSize: '15px', fontWeight: 600 }}
-                        onClick={handleEnrollmentSave}
-                      >
-                        Save and Continue
-                      </button>
                     </div>
                   </motion.div>
                 )}
@@ -738,13 +743,6 @@ export function CheckoutPage() {
                       <FieldGroup label={get('checkout.zipLabel')} value={sf.zip} onChange={v => setSf(p => ({ ...p, zip: v }))} maxLength={5} />
                       <FieldGroup label={get('checkout.phoneLabel')} value={sf.phone} onChange={v => setSf(p => ({ ...p, phone: v }))} type="tel" />
                     </div>
-                    <button
-                      className="w-full bg-[#C8102E] text-white py-3 rounded-full border-none cursor-pointer transition-all hover:bg-[#a00d24] mt-2"
-                      style={{ fontSize: '15px', fontWeight: 600 }}
-                      onClick={handleShippingSaveAndContinue}
-                    >
-                      Save and Continue
-                    </button>
                   </div>
                 </motion.div>
               )}
@@ -945,13 +943,6 @@ export function CheckoutPage() {
                       )}
                     </div>
 
-                    <button
-                      className="w-full bg-[#C8102E] text-white py-3 rounded-full border-none cursor-pointer transition-all hover:bg-[#a00d24] mt-5"
-                      style={{ fontSize: '15px', fontWeight: 600 }}
-                      onClick={handleSavePayment}
-                    >
-                      Save and Continue
-                    </button>
                   </div>
                 </motion.div>
               )}
@@ -1067,7 +1058,7 @@ export function CheckoutPage() {
                               <div className="text-[#555]" style={{ fontSize: '13px' }}>
                                 <span style={{ fontWeight: 600 }}>Subscription:</span>{' '}
                                 <span className={item.subscription ? 'text-[#2e7d32]' : 'text-[#999]'}>
-                                  {item.subscription ? 'Active' : 'One-time'}
+                                  {item.subscription ? 'Added' : 'None'}
                                 </span>
                               </div>
                             </div>
@@ -1094,20 +1085,6 @@ export function CheckoutPage() {
                         </div>
                       </div>
                     )}
-
-                    {/* Place Order button */}
-                    <button
-                      className={`w-full py-3.5 px-7 rounded-full border-none text-white mt-5 transition-all ${
-                        canPlaceOrder
-                          ? 'bg-[#C8102E] cursor-pointer hover:bg-[#a00d24]'
-                          : 'bg-[#ccc] cursor-not-allowed'
-                      }`}
-                      style={{ fontSize: '16px', fontWeight: 600 }}
-                      disabled={!canPlaceOrder}
-                      onClick={() => canPlaceOrder && setPage('confirmation')}
-                    >
-                      <ET k="checkout.placeOrderBtn" />
-                    </button>
                   </div>
                 </motion.div>
               )}
@@ -1183,6 +1160,28 @@ export function CheckoutPage() {
         </div>
       )}
     </div>
+
+    {/* Sticky bottom button */}
+    <div
+      className="fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-[#e0e0e0] px-6 py-4"
+      style={{ boxShadow: '0 -4px 16px rgba(0,0,0,0.08)' }}
+    >
+      <div className="max-w-[1280px] mx-auto">
+        <button
+          className={`w-full py-3.5 rounded-full border-none text-white transition-all ${
+            stickyDisabled
+              ? 'bg-[#ccc] cursor-not-allowed'
+              : 'bg-[#C8102E] cursor-pointer hover:bg-[#a00d24]'
+          }`}
+          style={{ fontSize: '16px', fontWeight: 600 }}
+          disabled={stickyDisabled}
+          onClick={handleStickyBtn}
+        >
+          {stickyLabel}
+        </button>
+      </div>
+    </div>
+    </>
   );
 }
 
