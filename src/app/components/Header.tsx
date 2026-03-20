@@ -5,6 +5,7 @@ import { useState, useEffect, useRef } from 'react';
 import { ET } from './EditableText';
 import { EI } from './EditableImage';
 import { toast } from 'sonner';
+import { AuthModal } from './AuthPage';
 
 export function Header() {
   const { getItemCount, setPage, userName, logOut, setAuthReturnPage, currentPage, resetCartToDefaults } = useCart();
@@ -14,6 +15,7 @@ export function Header() {
   const hasItems = !isOnConfirmation && count > 0;
   const [menuOpen, setMenuOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [authModalOpen, setAuthModalOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const dropdownTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -48,8 +50,7 @@ export function Header() {
   };
 
   const handleLoginClick = () => {
-    setAuthReturnPage('cart');
-    setPage('auth');
+    setAuthModalOpen(true);
     setMenuOpen(false);
   };
 
@@ -397,6 +398,9 @@ export function Header() {
           to { transform: translateX(0); }
         }
       `}</style>
+
+      {/* Auth Modal — triggered by header login icon */}
+      {authModalOpen && <AuthModal onClose={() => setAuthModalOpen(false)} />}
     </>
   );
 }
