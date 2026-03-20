@@ -258,44 +258,47 @@ export function ConfirmationPage() {
             return (
               <div
                 key={sp.id}
-                className="bg-white rounded-xl text-center transition-all hover:-translate-y-0.5 overflow-hidden"
+                className="bg-white rounded-xl transition-all hover:-translate-y-0.5 overflow-hidden flex flex-col"
                 style={{ border: '1px solid #e8e8e8' }}
               >
-                {/* Large product image */}
+                {/* Product image */}
                 <EI
                   k={imgKey}
                   alt={get(nameKey)}
                   className="w-full h-full object-contain"
-                  containerClassName="w-full h-[180px] flex items-center justify-center bg-white p-4"
+                  containerClassName="w-full aspect-square flex items-center justify-center bg-[#f8f8f8]"
                 />
-                {/* Card body */}
-                <div className="px-5 py-4">
+                {/* Card body — left aligned */}
+                <div className="px-4 py-4 flex flex-col flex-1">
                   <div style={{ fontSize: '15px', fontWeight: 600, marginBottom: '2px', color: '#1a1a1a' }}>
                     <ET k={nameKey} />
                   </div>
-                  <div style={{ fontSize: '13px', fontStyle: 'italic', color: '#999', marginBottom: '10px' }}>
+                  <div style={{ fontSize: '13px', fontStyle: 'italic', color: '#999' }}>
                     <ET k="cart.optionsAvailable" />
                   </div>
-                  <div style={{ fontSize: '20px', fontWeight: 700, color: '#1a1a1a', marginBottom: '2px' }}>
-                    ${sp.price.toFixed(2)}
+                  {/* Price block — visually separated */}
+                  <div className="mt-auto pt-4">
+                    <div style={{ fontSize: '20px', fontWeight: 700, color: '#1a1a1a', marginBottom: '2px' }}>
+                      ${sp.price.toFixed(2)}
+                    </div>
+                    <div className="mb-3" style={{ fontSize: '13px', fontWeight: 600, color: '#C8102E' }}>
+                      {sp.pv} {get('cartItem.pvSuffix')}
+                      <span className="text-[#bbb] mx-1.5">|</span>
+                      <span style={{ color: '#999', textDecoration: 'line-through', fontWeight: 400 }}>
+                        ${sp.retailPrice.toFixed(2)}
+                      </span>
+                    </div>
+                    <button
+                      className="w-full bg-[#1a1a1a] text-white py-2.5 rounded-full border-none cursor-pointer transition-all hover:bg-[#333]"
+                      style={{ fontSize: '14px', fontWeight: 600, fontFamily: "'DM Sans', sans-serif" }}
+                      onClick={() => {
+                        addSuggestedToCart(sp);
+                        toast.success(`${sp.name} added to cart!`);
+                      }}
+                    >
+                      <ET k="cart.addToCartBtn" />
+                    </button>
                   </div>
-                  <div className="flex items-center justify-center gap-2" style={{ marginBottom: '4px' }}>
-                    <span style={{ fontSize: '12px', color: '#888' }}>{sp.pv} {get('cartItem.pvSuffix')}</span>
-                    <span style={{ fontSize: '12px', color: '#bbb' }}>|</span>
-                    <span style={{ fontSize: '12px', color: '#999', textDecoration: 'line-through' }}>
-                      ${sp.retailPrice.toFixed(2)}
-                    </span>
-                  </div>
-                  <button
-                    className="w-full bg-[#1a1a1a] text-white py-2.5 rounded-full border-none cursor-pointer transition-all hover:bg-[#333] mt-3"
-                    style={{ fontSize: '14px', fontWeight: 600, fontFamily: "'DM Sans', sans-serif" }}
-                    onClick={() => {
-                      addSuggestedToCart(sp);
-                      toast.success(`${sp.name} added to cart!`);
-                    }}
-                  >
-                    <ET k="cart.addToCartBtn" />
-                  </button>
                 </div>
               </div>
             );

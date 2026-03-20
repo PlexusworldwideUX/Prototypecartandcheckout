@@ -73,49 +73,72 @@ export function ShareCartModal({ open, onClose }: ShareModalProps) {
           </>
         ) : (
           <>
-            <div className="text-center mb-3">
-              <CheckCircle size={40} className="text-[#2e7d32] mx-auto" />
-              <h2 style={{ fontFamily: "'DM Sans', sans-serif", fontSize: '24px', marginTop: '8px' }}>
+            {/* X close button top-right */}
+            <div className="flex justify-end mb-2">
+              <button
+                className="p-1.5 rounded-full hover:bg-[#f5f5f5] transition-colors bg-transparent border-none cursor-pointer text-[#555]"
+                onClick={onClose}
+              >
+                <X size={20} />
+              </button>
+            </div>
+            <div className="text-center mb-5">
+              <CheckCircle size={44} className="text-[#2e7d32] mx-auto" />
+              <h2 style={{ fontFamily: "'DM Sans', sans-serif", fontSize: '26px', fontWeight: 700, marginTop: '10px', marginBottom: 0 }}>
                 <ET k="modal.share.linkCreated" />
               </h2>
             </div>
-            <div
-              className="bg-[#f9e8eb] border border-[#e8c0c8] rounded-lg p-3 my-3 break-all"
-              style={{ fontSize: '13px', fontFamily: 'monospace', color: '#C8102E' }}
-            >
-              https://plexus.com/cart/share?id=PLX-XC8821K&promo={promoCode || 'SAVE10'}
+            {/* URL row — large red text + copy icon */}
+            <div className="flex items-center justify-between gap-3 mb-1">
+              <span style={{ fontSize: '16px', fontWeight: 700, color: '#C8102E', wordBreak: 'break-all', lineHeight: 1.4 }}>
+                https://shareplex.us/share/M-h-uAGy
+              </span>
+              <button
+                className="flex-shrink-0 p-1.5 rounded-md hover:bg-[#f5f5f5] transition-colors bg-transparent border-none cursor-pointer text-[#555]"
+                title="Copy link"
+                onClick={() => navigator.clipboard?.writeText('https://shareplex.us/share/M-h-uAGy')}
+              >
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
+                  <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+                </svg>
+              </button>
             </div>
-            <p style={{ fontSize: '11.5px', color: '#888', marginBottom: '12px', lineHeight: 1.5 }}>
+            <p style={{ fontSize: '11.5px', color: '#888', marginBottom: '20px', lineHeight: 1.5 }}>
               <ET k="modal.share.linkDisclaimer" />
             </p>
-            <div className="flex justify-center gap-4 my-4">
-              <button className="w-11 h-11 rounded-full bg-[#1877f2] text-white flex items-center justify-center cursor-pointer border-none hover:scale-110 transition-transform" title="Facebook">
-                <span style={{ fontWeight: 900, fontSize: '20px' }}>f</span>
+            {/* Social icons */}
+            <div className="flex justify-center gap-4 mb-6">
+              <button className="w-12 h-12 rounded-full bg-[#1877f2] text-white flex items-center justify-center cursor-pointer border-none hover:scale-110 transition-transform" title="Facebook">
+                <span style={{ fontWeight: 900, fontSize: '22px' }}>f</span>
               </button>
-              <button className="w-11 h-11 rounded-full bg-black text-white flex items-center justify-center cursor-pointer border-none hover:scale-110 transition-transform" title="X">
+              <button className="w-12 h-12 rounded-full bg-black text-white flex items-center justify-center cursor-pointer border-none hover:scale-110 transition-transform" title="X">
                 <span style={{ fontWeight: 900, fontSize: '16px' }}>{'\uD835\uDD4F'}</span>
               </button>
-              <button className="w-11 h-11 rounded-full bg-[#34c759] text-white flex items-center justify-center cursor-pointer border-none hover:scale-110 transition-transform" title="Text Message">
-                <Smartphone size={18} />
+              <button className="w-12 h-12 rounded-full bg-[#34c759] text-white flex items-center justify-center cursor-pointer border-none hover:scale-110 transition-transform" title="Text Message">
+                <Smartphone size={20} />
               </button>
-              <button className="w-11 h-11 rounded-full bg-[#ea4335] text-white flex items-center justify-center cursor-pointer border-none hover:scale-110 transition-transform" title="Email">
-                <Mail size={18} />
+              <button className="w-12 h-12 rounded-full bg-[#ea4335] text-white flex items-center justify-center cursor-pointer border-none hover:scale-110 transition-transform" title="Email">
+                <Mail size={20} />
               </button>
               <button
-                className="w-11 h-11 rounded-full bg-[#6b7280] text-white flex items-center justify-center cursor-pointer border-none hover:scale-110 transition-transform"
+                className="w-12 h-12 rounded-full bg-[#6b7280] text-white flex items-center justify-center cursor-pointer border-none hover:scale-110 transition-transform"
                 title="Copy Link"
-                onClick={() => navigator.clipboard?.writeText('https://plexus.com/cart/share?id=PLX-XC8821K&promo=SAVE10')}
+                onClick={() => navigator.clipboard?.writeText('https://shareplex.us/share/M-h-uAGy')}
               >
-                <LinkIcon size={18} />
+                <LinkIcon size={20} />
               </button>
             </div>
-            <button
-              className="w-full bg-[#1a1a1a] text-white py-3 rounded-full border-none cursor-pointer"
-              style={{ fontSize: '14px', fontWeight: 600 }}
-              onClick={onClose}
-            >
-              <ET k="modal.share.closeBtn" />
-            </button>
+            {/* Underlined text close */}
+            <div className="text-center">
+              <button
+                className="bg-transparent border-none cursor-pointer text-[#1a1a1a] underline hover:text-[#C8102E] transition-colors"
+                style={{ fontSize: '15px', fontWeight: 700, fontFamily: "'DM Sans', sans-serif", textDecorationThickness: '2px', textUnderlineOffset: '3px' }}
+                onClick={onClose}
+              >
+                <ET k="modal.share.closeBtn" />
+              </button>
+            </div>
           </>
         )}
       </motion.div>
