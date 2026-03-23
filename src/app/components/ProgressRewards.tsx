@@ -6,6 +6,9 @@ interface ProgressRewardsProps {
   variant?: 'mobile' | 'desktop';
 }
 
+const DOT = 14;        // dot diameter px
+const GAP = 3;         // visual gap between line end and dot edge px
+
 export function ProgressRewards({ variant = 'mobile' }: ProgressRewardsProps) {
   const { getProductSubtotal, isSignedInMember } = useCart();
   const { get } = useContent();
@@ -22,18 +25,25 @@ export function ProgressRewards({ variant = 'mobile' }: ProgressRewardsProps) {
     : allMilestones;
 
   const maxThreshold = milestones[milestones.length - 1]?.threshold ?? 150;
-
-  // Dynamic right label: show the last achieved milestone threshold, $0.00 if none achieved
   const lastAchieved = [...milestones].reverse().find(m => subtotal >= m.threshold);
   const rightAmount = lastAchieved ? lastAchieved.threshold : 0;
 
-  // Gap between line end and dot edge — px value as a string, used as margin
-  const GAP = 4; // px — close but not touching
-
   return (
     <div style={{ width: '100%', paddingTop: '8px', paddingBottom: '4px', boxSizing: 'border-box' }}>
-      <div style={{ display: 'flex', alignItems: 'flex-start', width: '100%' }}>
 
+      {/* ── TRACK ROW ── */}
+      {/*
+        Structure per milestone: [line flex-1][dot DOT px]
+        Then trailing [line flex-1] [$label]
+        
+        The trick: line segments use negative margins to "reach into" the dot column space,
+        stopping GAP px away from the dot edge. The dot column is zero-margin so labels align perfectly.
+        
+        Specifically: line right edge should stop (DOT/2 + GAP) px before dot center.
+        We achieve this by giving each line segment marginRight: -(DOT/2 - GAP) so it
+        overlaps into the dot column space, with the line div itself ending GAP px before the dot.
+      */}
+      <div style={{ display: 'flex', alignItems: 'flex-start', width: '100%' }}>
         {milestones.map((m, i) => {
           const achieved = subtotal >= m.threshold;
           const isLast = i === milestones.length - 1;
@@ -42,47 +52,60 @@ export function ProgressRewards({ variant = 'mobile' }: ProgressRewardsProps) {
             : subtotal >= m.threshold ? 1
             : (subtotal - prevThreshold) / (m.threshold - prevThreshold);
 
+          // How far the line extends into the dot column on the right side
+          const lineRightOverhang = DOT / 2 - GAP;
+
           return (
             <React.Fragment key={m.id}>
-              {/* Line segment before this dot */}
+              {/* Line segment — extends DOT/2-GAP px past its flex boundary into dot column */}
               <div style={{
                 flex: 1,
                 position: 'relative',
-                height: '14px',
+                height: `${DOT}px`,
                 minWidth: 0,
-                // Inset by GAP on the dot side so line ends close to but not touching dot
-                marginRight: `${GAP}px`,
+                // Negative right margin lets this div visually bleed into the dot column
+                marginRight: `-${lineRightOverhang}px`,
+                // But we clip overflow so it doesn't draw on top of the dot
+                // We'll handle z-index instead — dot renders after (higher z)
               }}>
                 <div style={{
                   position: 'absolute',
-                  left: 0, right: 0,
-                  top: '6px',
+                  left: 0,
+                  // Stop GAP px before the dot edge (dot edge is at right + lineRightOverhang)
+                  right: `${GAP}px`,
+                  top: '50%',
                   height: '2px',
+                  transform: 'translateY(-50%)',
                   background: '#e8c0c8',
                 }} />
                 <div style={{
                   position: 'absolute',
                   left: 0,
-                  top: '6px',
+                  right: `${GAP}px`,
+                  top: '50%',
                   height: '2px',
-                  width: `${lineFill * 100}%`,
+                  transform: 'translateY(-50%)',
                   background: '#C8102E',
-                  transition: 'width 0.5s ease',
+                  clipPath: `inset(0 ${(1 - lineFill) * 100}% 0 0)`,
+                  transition: 'clip-path 0.5s ease',
                 }} />
               </div>
 
-              {/* Dot + label column */}
+              {/* Dot + label — no margin, so label centers exactly on dot */}
               <div style={{
                 flexShrink: 0,
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
-                // Add right GAP margin so next line segment starts with gap after dot
-                marginRight: isLast ? 0 : `${GAP}px`,
+                zIndex: 1,
+                position: 'relative',
+                // Mirror negative margin on left of next line using positive marginRight
+                // so next line's left side also starts GAP from this dot's right edge
+                marginRight: isLast ? 0 : `-${lineRightOverhang}px`,
               }}>
                 <div style={{
-                  width: '14px',
-                  height: '14px',
+                  width: `${DOT}px`,
+                  height: `${DOT}px`,
                   borderRadius: '50%',
                   background: achieved ? '#C8102E' : '#fff',
                   border: '2px solid #C8102E',
@@ -105,15 +128,18 @@ export function ProgressRewards({ variant = 'mobile' }: ProgressRewardsProps) {
                 <div style={{
                   flex: 1,
                   position: 'relative',
-                  height: '14px',
+                  height: `${DOT}px`,
                   minWidth: 0,
-                  marginLeft: `${GAP}px`,
+                  marginLeft: `-${lineRightOverhang}px`,
                 }}>
                   <div style={{
                     position: 'absolute',
-                    left: 0, right: 0,
-                    top: '6px',
+                    // Start GAP px after the dot's right edge
+                    left: `${GAP}px`,
+                    right: 0,
+                    top: '50%',
                     height: '2px',
+                    transform: 'translateY(-50%)',
                     background: achieved ? '#C8102E' : '#e8c0c8',
                   }} />
                 </div>
@@ -122,14 +148,14 @@ export function ProgressRewards({ variant = 'mobile' }: ProgressRewardsProps) {
           );
         })}
 
-        {/* Dynamic amount label */}
+        {/* Dynamic amount */}
         <div style={{ flexShrink: 0, display: 'flex', alignItems: 'flex-start', marginLeft: '8px' }}>
           <span style={{
             fontSize: '15px',
             fontWeight: 700,
             color: '#C8102E',
             whiteSpace: 'nowrap',
-            lineHeight: '14px',
+            lineHeight: `${DOT}px`,
           }}>
             ${rightAmount.toFixed(2)}
           </span>
