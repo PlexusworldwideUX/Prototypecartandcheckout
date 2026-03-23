@@ -1,4 +1,3 @@
-import { Star, Truck, Gift } from 'lucide-react';
 import { useCart } from '../store/cart-context';
 import { useContent } from '../store/content-context';
 import { motion } from 'motion/react';
@@ -13,112 +12,105 @@ export function ProgressRewards({ variant = 'mobile' }: ProgressRewardsProps) {
   const subtotal = getProductSubtotal();
 
   const allMilestones = [
-    { threshold: 35, label: get('progress.membership'), icon: Star, id: 'membership', position: 20 },
-    { threshold: 75, label: get('progress.freeShipping'), icon: Truck, id: 'shipping', position: 55 },
-    { threshold: 150, label: get('progress.freeGift'), icon: Gift, id: 'gift', position: 85 },
+    { threshold: 35,  label: get('progress.membership'),  id: 'membership' },
+    { threshold: 75,  label: get('progress.freeShipping'), id: 'shipping'  },
+    { threshold: 150, label: get('progress.freeGift'),     id: 'gift'      },
   ];
 
-  // Signed-in members already have membership — exclude that milestone
   const milestones = isSignedInMember
-    ? allMilestones.filter(m => m.id !== 'membership').map((m, i, arr) => ({
-        ...m,
-        position: arr.length === 1 ? 50 : i === 0 ? 35 : 75,
-      }))
+    ? allMilestones.filter(m => m.id !== 'membership')
     : allMilestones;
 
-  const progress = Math.min((subtotal / 150) * 100, 100);
+  const maxThreshold = milestones[milestones.length - 1]?.threshold ?? 150;
+  const progress = Math.min((subtotal / maxThreshold) * 100, 100);
 
-  const achievedMilestones = milestones.filter(m => subtotal >= m.threshold);
-  const highestAchieved = achievedMilestones.length > 0
-    ? achievedMilestones[achievedMilestones.length - 1]
-    : null;
-
-  const isDesktop = variant === 'desktop';
-  const bgClass = isDesktop ? 'bg-transparent' : 'bg-white';
-  const iconBg = isDesktop ? 'bg-[#F3F3F3]' : 'bg-white';
+  // Position each dot as a percentage of the track width (excluding the right label)
+  // Track spans from 0% to 100%; dots sit at each milestone's fraction of max
+  const getDotPosition = (threshold: number) =>
+    `${(threshold / maxThreshold) * 100}%`;
 
   return (
-    <div className={`${bgClass} w-full py-3`}>
-      <div className="flex items-start gap-0">
-        <div className="flex-1 min-w-0">
-          <div className="relative" style={{ height: '22px' }}>
+    <div className="w-full pt-3 pb-3">
+      {/* Track row: line + dots + $150 label at right end */}
+      <div className="relative flex items-center" style={{ height: '20px' }}>
+        {/* Background track */}
+        <div
+          className="absolute left-0 right-0 bg-[#e0e0e0] rounded-full"
+          style={{ height: '2px', top: '50%', transform: 'translateY(-50%)' }}
+        />
+        {/* Progress fill */}
+        <motion.div
+          className="absolute left-0 bg-[#C8102E] rounded-full"
+          style={{ height: '2px', top: '50%', transform: 'translateY(-50%)' }}
+          initial={{ width: 0 }}
+          animate={{ width: `${progress}%` }}
+          transition={{ duration: 0.6, ease: [0.4, 0, 0.2, 1] }}
+        />
+        {/* Milestone dots */}
+        {milestones.map(m => {
+          const achieved = subtotal >= m.threshold;
+          return (
             <div
-              className="absolute left-0 right-0 h-[5px] bg-[#e0e0e0] rounded-full overflow-hidden"
-              style={{ top: '9px' }}
+              key={m.id}
+              className="absolute"
+              style={{
+                left: getDotPosition(m.threshold),
+                top: '50%',
+                transform: 'translate(-50%, -50%)',
+                zIndex: 1,
+              }}
             >
-              <motion.div
-                className="h-full bg-[#C8102E] rounded-full"
-                initial={{ width: 0 }}
-                animate={{ width: `${progress}%` }}
-                transition={{ duration: 0.6, ease: [0.4, 0, 0.2, 1] }}
+              <div
+                className="rounded-full transition-all duration-300"
+                style={{
+                  width: '12px',
+                  height: '12px',
+                  border: '2px solid #C8102E',
+                  background: achieved ? '#C8102E' : '#fff',
+                }}
               />
             </div>
-
-            {milestones.map(m => {
-              const achieved = subtotal >= m.threshold;
-              const Icon = m.icon;
-              return (
-                <div
-                  key={m.id}
-                  className="absolute"
-                  style={{
-                    left: `${m.position}%`,
-                    top: '1px',
-                    transform: 'translateX(-50%)',
-                  }}
-                >
-                  <div className={`w-[24px] h-[24px] ${iconBg} rounded-full flex items-center justify-center`}>
-                    <Icon
-                      size={18}
-                      className={`transition-colors duration-300 ${
-                        achieved ? 'text-[#C8102E]' : 'text-[#d0d0d0]'
-                      }`}
-                      strokeWidth={achieved ? 2.5 : 1.8}
-                    />
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-
-          <div className="relative" style={{ height: '14px', marginTop: '1px' }}>
-            {milestones.map(m => {
-              const achieved = subtotal >= m.threshold;
-              return (
-                <div
-                  key={m.id}
-                  className="absolute text-center"
-                  style={{
-                    left: `${m.position}%`,
-                    transform: 'translateX(-50%)',
-                    whiteSpace: 'nowrap',
-                  }}
-                >
-                  <span
-                    className={achieved ? 'text-[#C8102E]' : 'text-[#999]'}
-                    style={{ fontSize: '12px', fontWeight: achieved ? 600 : 400 }}
-                  >
-                    {m.label}
-                  </span>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-
+          );
+        })}
+        {/* $150 label pinned to far right of track */}
         <div
-          className="flex-shrink-0 flex items-center justify-end"
-          style={{ width: '64px', paddingTop: '4px' }}
+          className="absolute right-0"
+          style={{ transform: 'translateX(0)' }}
         >
-          <span
-            className={highestAchieved ? 'text-[#C8102E]' : 'text-[#bbb]'}
-            style={{ fontSize: '13px', fontWeight: 700, whiteSpace: 'nowrap' }}
-          >
-            {highestAchieved
-              ? `+ $${highestAchieved.threshold.toFixed(2)}`
-              : '$0.00'}
+          <span className="text-[#C8102E]" style={{ fontSize: '13px', fontWeight: 700, whiteSpace: 'nowrap' }}>
+            ${maxThreshold.toFixed(2)}
           </span>
         </div>
+      </div>
+
+      {/* Labels row — positioned under each dot */}
+      <div className="relative" style={{ height: '20px', marginTop: '6px' }}>
+        {milestones.map(m => {
+          const achieved = subtotal >= m.threshold;
+          // Use same percentage positioning but offset the label to avoid overflow
+          const pct = (m.threshold / maxThreshold) * 100;
+          return (
+            <div
+              key={m.id}
+              className="absolute text-center"
+              style={{
+                left: `${pct}%`,
+                transform: pct > 80 ? 'translateX(-80%)' : pct < 20 ? 'translateX(-20%)' : 'translateX(-50%)',
+                whiteSpace: 'nowrap',
+              }}
+            >
+              <span
+                style={{
+                  fontSize: '11px',
+                  fontWeight: achieved ? 600 : 400,
+                  color: achieved ? '#C8102E' : '#999',
+                }}
+              >
+                {m.label}
+              </span>
+            </div>
+          );
+        })}
       </div>
     </div>
   );

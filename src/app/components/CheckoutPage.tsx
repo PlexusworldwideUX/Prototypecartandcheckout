@@ -1099,11 +1099,11 @@ export function CheckoutPage() {
             <ProgressMeter showEnrollment={showEnrollment} enrollmentSaved={enrollmentSaved} shippingSaved={shippingSaved} paymentSaved={paymentSaved} activeSection={activeSection} />
           </div>
           <OrderSummary showProgress={false} showAttainedBenefits />
-          <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 pt-5 mt-1" style={{ fontSize: '12px' }}>
+          <div className="flex flex-nowrap items-center justify-center gap-0 pt-5 mt-1">
             {['policy.refundLabel', 'policy.shippingLabel', 'policy.privacyLabel', 'policy.termsLabel'].map((k, i) => (
-              <span key={k} className="inline-flex items-center gap-x-4">
-                {i > 0 && <span className="text-[#ccc]" style={{ fontSize: '12px' }}>|</span>}
-                <a className="text-[#888] underline cursor-pointer hover:text-[#C8102E] transition-colors">
+              <span key={k} className="inline-flex items-center flex-shrink-0">
+                {i > 0 && <span className="text-[#ccc] mx-2" style={{ fontSize: '12px', userSelect: 'none' }}>|</span>}
+                <a className="text-[#888] underline cursor-pointer hover:text-[#C8102E] transition-colors whitespace-nowrap" style={{ fontSize: '12px' }}>
                   <ET k={k} />
                 </a>
               </span>

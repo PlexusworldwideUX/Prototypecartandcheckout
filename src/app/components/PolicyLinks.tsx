@@ -39,16 +39,18 @@ export function PolicyLinks({ variant = 'mobile' }: { variant?: 'mobile' | 'desk
   return (
     <>
       <div
-        className={`flex flex-wrap items-center justify-center gap-x-4 gap-y-2 py-4 px-3 rounded-xl ${
+        className={`flex items-center justify-center py-4 px-3 rounded-xl ${
           isDesktop ? 'bg-transparent' : 'bg-white'
         }`}
+        style={{ flexWrap: 'nowrap', gap: 0, minWidth: 0 }}
       >
         {LINK_KEYS.map((link, i) => (
-          <span key={link.labelKey} className="inline-flex items-center gap-x-4">
-            {i > 0 && <span className="text-gray-300 text-xs">|</span>}
+          <span key={link.labelKey} className="inline-flex items-center flex-shrink-0">
+            {i > 0 && <span className="text-gray-300 mx-2" style={{ fontSize: '12px', userSelect: 'none' }}>|</span>}
             <button
               onClick={() => setOpenIdx(i)}
-              className="text-xs text-gray-500 underline hover:text-gray-700 transition-colors"
+              className="text-gray-500 underline hover:text-gray-700 transition-colors whitespace-nowrap bg-transparent border-none cursor-pointer p-0"
+              style={{ fontSize: '12px', fontFamily: "'DM Sans', sans-serif" }}
             >
               <ET k={link.labelKey} />
             </button>

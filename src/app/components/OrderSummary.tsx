@@ -78,12 +78,16 @@ export function OrderSummary({
   const displayTitle = title || get('orderSummary.title');
 
   return (
-    <div className="bg-[#f5f5f5] rounded-2xl p-6">
+    <div>
+      {/* Progress rewards — outside grey container, visible on all screen sizes */}
       {showProgress && (
-        <div className="hidden lg:block">
+        <div className="mb-2">
           <ProgressRewards variant="desktop" />
         </div>
       )}
+
+      {/* Order summary grey container */}
+      <div className="bg-[#f5f5f5] rounded-2xl p-6">
 
       <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: '22px', fontWeight: 400, marginBottom: '16px' }}>
         {displayTitle}
@@ -343,6 +347,7 @@ export function OrderSummary({
           )}
         </div>
       )}
+    </div>
     </div>
   );
 }
