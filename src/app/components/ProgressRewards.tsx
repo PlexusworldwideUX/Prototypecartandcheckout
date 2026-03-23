@@ -22,95 +22,107 @@ export function ProgressRewards({ variant = 'mobile' }: ProgressRewardsProps) {
     : allMilestones;
 
   const maxThreshold = milestones[milestones.length - 1]?.threshold ?? 150;
-  const progress = Math.min((subtotal / maxThreshold) * 100, 100);
+  const progress = Math.min(subtotal / maxThreshold, 1);
 
-  // Position each dot as a percentage of the track width (excluding the right label)
-  // Track spans from 0% to 100%; dots sit at each milestone's fraction of max
-  const getDotPosition = (threshold: number) =>
-    `${(threshold / maxThreshold) * 100}%`;
+  // Number of segments = milestones.length + 1 (before first, between each, after last — but last segment leads to $label)
+  // Layout: [line]•[line]•[line]•[line] $150.00
+  // Each segment is equal width. Dots sit at junctions.
+  const DOT_SIZE = 12; // px
+  const SEGMENT_COUNT = milestones.length + 1; // e.g. 4 segments for 3 dots
 
   return (
-    <div className="w-full pt-3 pb-3">
-      {/* Track row: line + dots + $150 label at right end */}
-      <div className="relative flex items-center" style={{ height: '20px' }}>
-        {/* Background track */}
-        <div
-          className="absolute left-0 right-0 bg-[#e0e0e0] rounded-full"
-          style={{ height: '2px', top: '50%', transform: 'translateY(-50%)' }}
-        />
-        {/* Progress fill */}
-        <motion.div
-          className="absolute left-0 bg-[#C8102E] rounded-full"
-          style={{ height: '2px', top: '50%', transform: 'translateY(-50%)' }}
-          initial={{ width: 0 }}
-          animate={{ width: `${progress}%` }}
-          transition={{ duration: 0.6, ease: [0.4, 0, 0.2, 1] }}
-        />
-        {/* Milestone dots */}
-        {milestones.map(m => {
+    <div className="w-full py-4 px-1">
+      {/* Track row */}
+      <div className="flex items-center" style={{ gap: 0 }}>
+        {milestones.map((m, i) => {
           const achieved = subtotal >= m.threshold;
+          // Progress through this segment
+          const segStart = i === 0 ? 0 : milestones[i - 1].threshold;
+          const segEnd = m.threshold;
+          const segProgress = Math.min(Math.max((subtotal - segStart) / (segEnd - segStart), 0), 1);
+          const lineBeforeFilled = subtotal >= segStart;
+          const lineBeforeProgress = lineBeforeFilled
+            ? subtotal >= segEnd ? 1 : segProgress
+            : 0;
+
           return (
-            <div
-              key={m.id}
-              className="absolute"
-              style={{
-                left: getDotPosition(m.threshold),
-                top: '50%',
-                transform: 'translate(-50%, -50%)',
-                zIndex: 1,
-              }}
-            >
+            <div key={m.id} className="flex items-center" style={{ flex: 1 }}>
+              {/* Line segment before this dot */}
+              <div className="relative flex-1" style={{ height: '2px' }}>
+                <div className="absolute inset-0 bg-[#e0d0d5] rounded-full" />
+                <motion.div
+                  className="absolute inset-y-0 left-0 bg-[#C8102E] rounded-full"
+                  initial={{ width: '0%' }}
+                  animate={{ width: `${lineBeforeProgress * 100}%` }}
+                  transition={{ duration: 0.5, ease: [0.4, 0, 0.2, 1] }}
+                />
+              </div>
+              {/* Dot */}
               <div
-                className="rounded-full transition-all duration-300"
+                className="flex-shrink-0 rounded-full transition-all duration-300"
                 style={{
-                  width: '12px',
-                  height: '12px',
-                  border: '2px solid #C8102E',
+                  width: `${DOT_SIZE}px`,
+                  height: `${DOT_SIZE}px`,
                   background: achieved ? '#C8102E' : '#fff',
+                  border: '2px solid #C8102E',
+                  zIndex: 1,
                 }}
               />
             </div>
           );
         })}
-        {/* $150 label pinned to far right of track */}
-        <div
-          className="absolute right-0"
-          style={{ transform: 'translateX(0)' }}
-        >
-          <span className="text-[#C8102E]" style={{ fontSize: '13px', fontWeight: 700, whiteSpace: 'nowrap' }}>
+
+        {/* Final line segment after last dot */}
+        {(() => {
+          const lastMilestone = milestones[milestones.length - 1];
+          const filled = subtotal >= (lastMilestone?.threshold ?? 0);
+          return (
+            <div className="relative flex-1" style={{ height: '2px', minWidth: '20px' }}>
+              <div className="absolute inset-0 bg-[#e0d0d5] rounded-full" />
+              {filled && <div className="absolute inset-0 bg-[#C8102E] rounded-full" />}
+            </div>
+          );
+        })()}
+
+        {/* $150.00 label — right of last segment, same line */}
+        <div className="flex-shrink-0 ml-3">
+          <span className="text-[#C8102E]" style={{ fontSize: '14px', fontWeight: 700, whiteSpace: 'nowrap' }}>
             ${maxThreshold.toFixed(2)}
           </span>
         </div>
       </div>
 
-      {/* Labels row — positioned under each dot */}
-      <div className="relative" style={{ height: '20px', marginTop: '6px' }}>
-        {milestones.map(m => {
+      {/* Labels row — aligned under each dot */}
+      <div className="flex items-start" style={{ gap: 0, marginTop: '8px' }}>
+        {milestones.map((m, i) => {
           const achieved = subtotal >= m.threshold;
-          // Use same percentage positioning but offset the label to avoid overflow
-          const pct = (m.threshold / maxThreshold) * 100;
           return (
-            <div
-              key={m.id}
-              className="absolute text-center"
-              style={{
-                left: `${pct}%`,
-                transform: pct > 80 ? 'translateX(-80%)' : pct < 20 ? 'translateX(-20%)' : 'translateX(-50%)',
-                whiteSpace: 'nowrap',
-              }}
-            >
-              <span
-                style={{
-                  fontSize: '11px',
-                  fontWeight: achieved ? 600 : 400,
-                  color: achieved ? '#C8102E' : '#999',
-                }}
+            <div key={m.id} className="flex items-start" style={{ flex: 1 }}>
+              {/* Spacer matching the line before the dot — flex-1 */}
+              <div className="flex-1" />
+              {/* Label centered on dot — dot is DOT_SIZE wide */}
+              <div
+                className="flex-shrink-0 text-center"
+                style={{ width: '0px', overflow: 'visible' }}
               >
-                {m.label}
-              </span>
+                <span
+                  style={{
+                    fontSize: '11px',
+                    fontWeight: achieved ? 600 : 400,
+                    color: achieved ? '#C8102E' : '#aaa',
+                    whiteSpace: 'nowrap',
+                    display: 'inline-block',
+                    transform: 'translateX(-50%)',
+                  }}
+                >
+                  {m.label}
+                </span>
+              </div>
             </div>
           );
         })}
+        {/* Trailing spacer to match final segment */}
+        <div style={{ flex: 1 }} />
       </div>
     </div>
   );
