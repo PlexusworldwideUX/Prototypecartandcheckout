@@ -23,9 +23,9 @@ export function ProgressRewards({ variant = 'mobile' }: ProgressRewardsProps) {
 
   const maxThreshold = milestones[milestones.length - 1]?.threshold ?? 150;
 
-  // Dynamic right label: show the next unachieved milestone threshold, or max if all achieved
-  const nextMilestone = milestones.find(m => subtotal < m.threshold);
-  const rightAmount = nextMilestone ? nextMilestone.threshold : maxThreshold;
+  // Dynamic right label: show the last achieved milestone threshold, $0.00 if none achieved
+  const lastAchieved = [...milestones].reverse().find(m => subtotal >= m.threshold);
+  const rightAmount = lastAchieved ? lastAchieved.threshold : 0;
 
   // Gap between line end and dot edge — px value as a string, used as margin
   const GAP = 4; // px — close but not touching
