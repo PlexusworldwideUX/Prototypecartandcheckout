@@ -1,3 +1,4 @@
+import React from 'react';
 import { useCart } from '../store/cart-context';
 import { useContent } from '../store/content-context';
 import { motion } from 'motion/react';
@@ -22,38 +23,31 @@ export function ProgressRewards({ variant = 'mobile' }: ProgressRewardsProps) {
     : allMilestones;
 
   const maxThreshold = milestones[milestones.length - 1]?.threshold ?? 150;
-  const progress = Math.min(subtotal / maxThreshold, 1);
-
-  // Number of segments = milestones.length + 1 (before first, between each, after last — but last segment leads to $label)
-  // Layout: [line]•[line]•[line]•[line] $150.00
-  // Each segment is equal width. Dots sit at junctions.
-  const DOT_SIZE = 12; // px
-  const SEGMENT_COUNT = milestones.length + 1; // e.g. 4 segments for 3 dots
+  const DOT = 12; // dot diameter in px
 
   return (
     <div className="w-full py-4 px-1">
-      {/* Track row */}
-      <div className="flex items-center" style={{ gap: 0 }}>
+
+      {/* ── TRACK ROW ── */}
+      {/* Structure: [line][dot][line][dot][line][dot][line] $150 */}
+      <div className="flex items-center">
         {milestones.map((m, i) => {
           const achieved = subtotal >= m.threshold;
-          // Progress through this segment
-          const segStart = i === 0 ? 0 : milestones[i - 1].threshold;
-          const segEnd = m.threshold;
-          const segProgress = Math.min(Math.max((subtotal - segStart) / (segEnd - segStart), 0), 1);
-          const lineBeforeFilled = subtotal >= segStart;
-          const lineBeforeProgress = lineBeforeFilled
-            ? subtotal >= segEnd ? 1 : segProgress
-            : 0;
+          const prevThreshold = i === 0 ? 0 : milestones[i - 1].threshold;
+          const segFill =
+            subtotal <= prevThreshold ? 0
+            : subtotal >= m.threshold ? 1
+            : (subtotal - prevThreshold) / (m.threshold - prevThreshold);
 
           return (
-            <div key={m.id} className="flex items-center" style={{ flex: 1 }}>
+            <React.Fragment key={m.id}>
               {/* Line segment before this dot */}
               <div className="relative flex-1" style={{ height: '2px' }}>
-                <div className="absolute inset-0 bg-[#e0d0d5] rounded-full" />
+                <div className="absolute inset-0 rounded-full" style={{ background: '#e8c0c8' }} />
                 <motion.div
-                  className="absolute inset-y-0 left-0 bg-[#C8102E] rounded-full"
+                  className="absolute inset-y-0 left-0 rounded-full bg-[#C8102E]"
                   initial={{ width: '0%' }}
-                  animate={{ width: `${lineBeforeProgress * 100}%` }}
+                  animate={{ width: `${segFill * 100}%` }}
                   transition={{ duration: 0.5, ease: [0.4, 0, 0.2, 1] }}
                 />
               </div>
@@ -61,49 +55,47 @@ export function ProgressRewards({ variant = 'mobile' }: ProgressRewardsProps) {
               <div
                 className="flex-shrink-0 rounded-full transition-all duration-300"
                 style={{
-                  width: `${DOT_SIZE}px`,
-                  height: `${DOT_SIZE}px`,
+                  width: `${DOT}px`,
+                  height: `${DOT}px`,
                   background: achieved ? '#C8102E' : '#fff',
                   border: '2px solid #C8102E',
-                  zIndex: 1,
                 }}
               />
-            </div>
+            </React.Fragment>
           );
         })}
 
-        {/* Final line segment after last dot */}
+        {/* Trailing line after last dot */}
         {(() => {
-          const lastMilestone = milestones[milestones.length - 1];
-          const filled = subtotal >= (lastMilestone?.threshold ?? 0);
+          const filled = subtotal >= (milestones[milestones.length - 1]?.threshold ?? 0);
           return (
-            <div className="relative flex-1" style={{ height: '2px', minWidth: '20px' }}>
-              <div className="absolute inset-0 bg-[#e0d0d5] rounded-full" />
-              {filled && <div className="absolute inset-0 bg-[#C8102E] rounded-full" />}
+            <div className="relative flex-1" style={{ height: '2px', minWidth: '16px' }}>
+              <div className="absolute inset-0 rounded-full" style={{ background: '#e8c0c8' }} />
+              {filled && <div className="absolute inset-0 rounded-full bg-[#C8102E]" />}
             </div>
           );
         })()}
 
-        {/* $150.00 label — right of last segment, same line */}
-        <div className="flex-shrink-0 ml-3">
-          <span className="text-[#C8102E]" style={{ fontSize: '14px', fontWeight: 700, whiteSpace: 'nowrap' }}>
-            ${maxThreshold.toFixed(2)}
-          </span>
-        </div>
+        {/* $150.00 label inline with track */}
+        <span className="flex-shrink-0 ml-3 text-[#C8102E]" style={{ fontSize: '14px', fontWeight: 700, whiteSpace: 'nowrap' }}>
+          ${maxThreshold.toFixed(2)}
+        </span>
       </div>
 
-      {/* Labels row — aligned under each dot */}
-      <div className="flex items-start" style={{ gap: 0, marginTop: '8px' }}>
+      {/* ── LABELS ROW ── */}
+      {/* Mirrors track structure exactly: [flex-1][DOT-wide label][flex-1][DOT-wide label]... [flex-1] */}
+      {/* This ensures each label is perfectly centered under its dot */}
+      <div className="flex items-start" style={{ marginTop: '8px' }}>
         {milestones.map((m, i) => {
           const achieved = subtotal >= m.threshold;
           return (
-            <div key={m.id} className="flex items-start" style={{ flex: 1 }}>
-              {/* Spacer matching the line before the dot — flex-1 */}
+            <React.Fragment key={m.id}>
+              {/* flex-1 spacer mirrors the line segment */}
               <div className="flex-1" />
-              {/* Label centered on dot — dot is DOT_SIZE wide */}
+              {/* DOT-wide cell mirrors the dot, text overflows centered */}
               <div
-                className="flex-shrink-0 text-center"
-                style={{ width: '0px', overflow: 'visible' }}
+                className="flex-shrink-0 flex justify-center"
+                style={{ width: `${DOT}px`, overflow: 'visible' }}
               >
                 <span
                   style={{
@@ -111,19 +103,18 @@ export function ProgressRewards({ variant = 'mobile' }: ProgressRewardsProps) {
                     fontWeight: achieved ? 600 : 400,
                     color: achieved ? '#C8102E' : '#aaa',
                     whiteSpace: 'nowrap',
-                    display: 'inline-block',
-                    transform: 'translateX(-50%)',
                   }}
                 >
                   {m.label}
                 </span>
               </div>
-            </div>
+            </React.Fragment>
           );
         })}
-        {/* Trailing spacer to match final segment */}
-        <div style={{ flex: 1 }} />
+        {/* Trailing spacer mirrors trailing line */}
+        <div className="flex-1" style={{ minWidth: '16px' }} />
       </div>
+
     </div>
   );
 }
