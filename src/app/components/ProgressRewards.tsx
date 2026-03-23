@@ -23,13 +23,15 @@ export function ProgressRewards({ variant = 'mobile' }: ProgressRewardsProps) {
 
   const maxThreshold = milestones[milestones.length - 1]?.threshold ?? 150;
 
+  // Dynamic right label: show the next unachieved milestone threshold, or max if all achieved
+  const nextMilestone = milestones.find(m => subtotal < m.threshold);
+  const rightAmount = nextMilestone ? nextMilestone.threshold : maxThreshold;
+
+  // Gap between line end and dot edge — px value as a string, used as margin
+  const GAP = 4; // px — close but not touching
+
   return (
     <div style={{ width: '100%', paddingTop: '8px', paddingBottom: '4px', boxSizing: 'border-box' }}>
-
-      {/* Single row: [dot+label] [line] [dot+label] [line] [dot+label] [line] [$150] */}
-      {/* The line segments are flex-1, the dot columns are fixed-width */}
-      {/* Dot and its label are in the same column div — guaranteed alignment */}
-
       <div style={{ display: 'flex', alignItems: 'flex-start', width: '100%' }}>
 
         {milestones.map((m, i) => {
@@ -46,10 +48,11 @@ export function ProgressRewards({ variant = 'mobile' }: ProgressRewardsProps) {
               <div style={{
                 flex: 1,
                 position: 'relative',
-                height: '14px', // matches dot height
+                height: '14px',
                 minWidth: 0,
+                // Inset by GAP on the dot side so line ends close to but not touching dot
+                marginRight: `${GAP}px`,
               }}>
-                {/* bg line */}
                 <div style={{
                   position: 'absolute',
                   left: 0, right: 0,
@@ -57,7 +60,6 @@ export function ProgressRewards({ variant = 'mobile' }: ProgressRewardsProps) {
                   height: '2px',
                   background: '#e8c0c8',
                 }} />
-                {/* fill */}
                 <div style={{
                   position: 'absolute',
                   left: 0,
@@ -69,9 +71,15 @@ export function ProgressRewards({ variant = 'mobile' }: ProgressRewardsProps) {
                 }} />
               </div>
 
-              {/* Dot + label column — dot and label share same container so they are always aligned */}
-              <div style={{ flexShrink: 0, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                {/* Dot */}
+              {/* Dot + label column */}
+              <div style={{
+                flexShrink: 0,
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                // Add right GAP margin so next line segment starts with gap after dot
+                marginRight: isLast ? 0 : `${GAP}px`,
+              }}>
                 <div style={{
                   width: '14px',
                   height: '14px',
@@ -80,7 +88,6 @@ export function ProgressRewards({ variant = 'mobile' }: ProgressRewardsProps) {
                   border: '2px solid #C8102E',
                   flexShrink: 0,
                 }} />
-                {/* Label directly below dot, centered */}
                 <span style={{
                   marginTop: '5px',
                   fontSize: '11px',
@@ -93,13 +100,14 @@ export function ProgressRewards({ variant = 'mobile' }: ProgressRewardsProps) {
                 </span>
               </div>
 
-              {/* If last dot, add trailing line before $150 label */}
+              {/* Trailing line after last dot */}
               {isLast && (
                 <div style={{
                   flex: 1,
                   position: 'relative',
                   height: '14px',
                   minWidth: 0,
+                  marginLeft: `${GAP}px`,
                 }}>
                   <div style={{
                     position: 'absolute',
@@ -114,17 +122,16 @@ export function ProgressRewards({ variant = 'mobile' }: ProgressRewardsProps) {
           );
         })}
 
-        {/* $150.00 label — vertically centered on the dot row (top: 0, aligns with dot center) */}
-        <div style={{ flexShrink: 0, paddingTop: '0px', display: 'flex', alignItems: 'flex-start' }}>
+        {/* Dynamic amount label */}
+        <div style={{ flexShrink: 0, display: 'flex', alignItems: 'flex-start', marginLeft: '8px' }}>
           <span style={{
             fontSize: '15px',
             fontWeight: 700,
             color: '#C8102E',
             whiteSpace: 'nowrap',
-            lineHeight: '14px', // match dot height so it sits on the line
-            marginLeft: '8px',
+            lineHeight: '14px',
           }}>
-            ${maxThreshold.toFixed(2)}
+            ${rightAmount.toFixed(2)}
           </span>
         </div>
 
