@@ -71,11 +71,13 @@ export function ProgressRewards({ variant = 'mobile' }: ProgressRewardsProps) {
                   width: `${DOT}px`,
                   height: `${DOT}px`,
                   borderRadius: '50%',
-                  background: achieved ? '#C8102E' : '#fff',
-                  border: '2px solid #C8102E',
-                  outline: '3px solid #fff',
+                  background: achieved ? '#C8102E' : '#ffffff',
+                  border: `2px solid #C8102E`,
+                  boxShadow: '0 0 0 4px #ffffff',
                   flexShrink: 0,
                   boxSizing: 'border-box',
+                  position: 'relative',
+                  zIndex: 2,
                 }} />
                 {/* Label — always centered under its dot because it's in the same column */}
                 <span style={{
