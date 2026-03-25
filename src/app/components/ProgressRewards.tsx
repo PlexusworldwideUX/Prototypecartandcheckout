@@ -30,39 +30,43 @@ export function ProgressRewards({ variant = 'mobile' }: ProgressRewardsProps) {
 
   return (
     <div style={{ width: '100%', paddingTop: '8px', paddingBottom: '4px', boxSizing: 'border-box' }}>
-      <div style={{ display: 'flex', alignItems: 'flex-start', width: '100%', position: 'relative' }}>
+      <div style={{ display: 'flex', alignItems: 'flex-start', width: '100%' }}>
 
-        {/* Grey background track + animated red fill — contained to milestone columns only */}
-        <div style={{
-          position: 'absolute',
-          left: 0,
-          right: 0,
-          top: `${DOT / 2}px`,
-          height: '2px',
-          transform: 'translateY(-50%)',
-          zIndex: 0,
-          overflow: 'hidden',
-        }}>
-          {/* Grey background */}
-          <div style={{ position: 'absolute', inset: 0, background: '#e0d0d2', borderRadius: '2px' }} />
-          {/* Animated red fill */}
+        {/* Milestone columns — track lives INSIDE here so it never reaches the $ label */}
+        <div style={{ display: 'flex', justifyContent: 'space-between', flex: 1, position: 'relative', zIndex: 1 }}>
+
+          {/* Grey background track — scoped to milestone columns only */}
           <div style={{
             position: 'absolute',
-            top: 0, left: 0, bottom: 0,
-            width: `${progressPct}%`,
-            background: '#C8102E',
+            left: 0,
+            right: 0,
+            top: `${DOT / 2}px`,
+            height: '2px',
+            transform: 'translateY(-50%)',
+            zIndex: 0,
             borderRadius: '2px',
+            background: '#e0d0d2',
+          }} />
+
+          {/* Animated red fill — same scope */}
+          <div style={{
+            position: 'absolute',
+            top: `${DOT / 2}px`,
+            left: 0,
+            height: '2px',
+            transform: 'translateY(-50%)',
+            zIndex: 0,
+            borderRadius: '2px',
+            background: '#C8102E',
+            width: `${progressPct}%`,
             transition: 'width 0.5s cubic-bezier(0.4, 0, 0.2, 1)',
           }} />
-        </div>
 
-        {/* Milestone columns — dot + label grouped, space-between */}
-        <div style={{ display: 'flex', justifyContent: 'space-between', flex: 1, position: 'relative', zIndex: 1 }}>
+          {/* Dots + labels */}
           {milestones.map((m) => {
             const achieved = subtotal >= m.threshold;
             return (
-              <div key={m.id} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '5px' }}>
-                {/* Dot with white ring to create visual gap from line */}
+              <div key={m.id} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '5px', position: 'relative', zIndex: 2 }}>
                 <div style={{
                   width: `${DOT}px`,
                   height: `${DOT}px`,
@@ -72,7 +76,6 @@ export function ProgressRewards({ variant = 'mobile' }: ProgressRewardsProps) {
                   boxShadow: '0 0 0 4px #ffffff',
                   flexShrink: 0,
                   boxSizing: 'border-box',
-                  zIndex: 2,
                   transition: 'background 0.3s ease',
                 }} />
                 <span style={{ fontSize: '11px', fontWeight: 600, color: '#C8102E', whiteSpace: 'nowrap', textAlign: 'center' }}>
@@ -83,7 +86,7 @@ export function ProgressRewards({ variant = 'mobile' }: ProgressRewardsProps) {
           })}
         </div>
 
-        {/* Amount label */}
+        {/* Amount label — outside milestone div, track never reaches here */}
         <span style={{
           flexShrink: 0,
           marginLeft: '10px',
@@ -92,8 +95,6 @@ export function ProgressRewards({ variant = 'mobile' }: ProgressRewardsProps) {
           color: '#C8102E',
           whiteSpace: 'nowrap',
           lineHeight: `${DOT}px`,
-          position: 'relative',
-          zIndex: 1,
         }}>
           ${rightAmount.toFixed(2)}
         </span>
