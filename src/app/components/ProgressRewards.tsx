@@ -6,6 +6,8 @@ interface ProgressRewardsProps {
   variant?: 'mobile' | 'desktop';
 }
 
+const DOT = 14;
+
 export function ProgressRewards({ variant = 'mobile' }: ProgressRewardsProps) {
   const { getProductSubtotal, isSignedInMember } = useCart();
   const { get } = useContent();
@@ -24,69 +26,56 @@ export function ProgressRewards({ variant = 'mobile' }: ProgressRewardsProps) {
   const maxThreshold = milestones[milestones.length - 1]?.threshold ?? 150;
   const lastAchieved = [...milestones].reverse().find(m => subtotal >= m.threshold);
   const rightAmount = lastAchieved ? lastAchieved.threshold : 0;
-
-  const DOT = 14;
+  const progressPct = Math.min((subtotal / maxThreshold) * 100, 100);
 
   return (
     <div style={{ width: '100%', paddingTop: '8px', paddingBottom: '4px', boxSizing: 'border-box' }}>
-
-      {/* Outer row: [milestone columns spaced between] [$amount] */}
       <div style={{ display: 'flex', alignItems: 'flex-start', width: '100%', position: 'relative' }}>
 
-        {/* Single red line running behind the milestone columns only — ends before $amount label */}
-
-        {/* Milestone columns — space-between so they spread across full width */}
+        {/* Grey background track + animated red fill — contained to milestone columns only */}
         <div style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          flex: 1,
-          position: 'relative',
-          zIndex: 1,
+          position: 'absolute',
+          left: 0,
+          right: 0,
+          top: `${DOT / 2}px`,
+          height: '2px',
+          transform: 'translateY(-50%)',
+          zIndex: 0,
+          overflow: 'hidden',
         }}>
-          {/* Single red line inside milestone columns — stops at last dot, never reaches $label */}
+          {/* Grey background */}
+          <div style={{ position: 'absolute', inset: 0, background: '#e0d0d2', borderRadius: '2px' }} />
+          {/* Animated red fill */}
           <div style={{
             position: 'absolute',
-            left: 0,
-            right: 0,
-            top: `${DOT / 2}px`,
-            height: '2px',
+            top: 0, left: 0, bottom: 0,
+            width: `${progressPct}%`,
             background: '#C8102E',
-            transform: 'translateY(-50%)',
-            zIndex: 0,
+            borderRadius: '2px',
+            transition: 'width 0.5s cubic-bezier(0.4, 0, 0.2, 1)',
           }} />
+        </div>
+
+        {/* Milestone columns — dot + label grouped, space-between */}
+        <div style={{ display: 'flex', justifyContent: 'space-between', flex: 1, position: 'relative', zIndex: 1 }}>
           {milestones.map((m) => {
             const achieved = subtotal >= m.threshold;
             return (
-              <div
-                key={m.id}
-                style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  gap: '5px',
-                }}
-              >
-                {/* Dot — white outline creates visual separation from the line */}
+              <div key={m.id} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '5px' }}>
+                {/* Dot with white ring to create visual gap from line */}
                 <div style={{
                   width: `${DOT}px`,
                   height: `${DOT}px`,
                   borderRadius: '50%',
                   background: achieved ? '#C8102E' : '#ffffff',
-                  border: `2px solid #C8102E`,
+                  border: '2px solid #C8102E',
                   boxShadow: '0 0 0 4px #ffffff',
                   flexShrink: 0,
                   boxSizing: 'border-box',
-                  position: 'relative',
                   zIndex: 2,
+                  transition: 'background 0.3s ease',
                 }} />
-                {/* Label — always centered under its dot because it's in the same column */}
-                <span style={{
-                  fontSize: '11px',
-                  fontWeight: 600,
-                  color: '#C8102E',
-                  whiteSpace: 'nowrap',
-                  textAlign: 'center',
-                }}>
+                <span style={{ fontSize: '11px', fontWeight: 600, color: '#C8102E', whiteSpace: 'nowrap', textAlign: 'center' }}>
                   {m.label}
                 </span>
               </div>
@@ -94,7 +83,7 @@ export function ProgressRewards({ variant = 'mobile' }: ProgressRewardsProps) {
           })}
         </div>
 
-        {/* Amount label — vertically aligned with the dots */}
+        {/* Amount label */}
         <span style={{
           flexShrink: 0,
           marginLeft: '10px',
