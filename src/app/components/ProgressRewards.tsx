@@ -33,17 +33,7 @@ export function ProgressRewards({ variant = 'mobile' }: ProgressRewardsProps) {
       {/* Outer row: [milestone columns spaced between] [$amount] */}
       <div style={{ display: 'flex', alignItems: 'flex-start', width: '100%', position: 'relative' }}>
 
-        {/* Single red line running behind everything — vertically centered on the dots */}
-        <div style={{
-          position: 'absolute',
-          left: 0,
-          right: 0,
-          top: `${DOT / 2}px`,
-          height: '2px',
-          background: '#C8102E',
-          transform: 'translateY(-50%)',
-          zIndex: 0,
-        }} />
+        {/* Single red line running behind the milestone columns only — ends before $amount label */}
 
         {/* Milestone columns — space-between so they spread across full width */}
         <div style={{
@@ -53,6 +43,17 @@ export function ProgressRewards({ variant = 'mobile' }: ProgressRewardsProps) {
           position: 'relative',
           zIndex: 1,
         }}>
+          {/* Single red line inside milestone columns — stops at last dot, never reaches $label */}
+          <div style={{
+            position: 'absolute',
+            left: 0,
+            right: 0,
+            top: `${DOT / 2}px`,
+            height: '2px',
+            background: '#C8102E',
+            transform: 'translateY(-50%)',
+            zIndex: 0,
+          }} />
           {milestones.map((m) => {
             const achieved = subtotal >= m.threshold;
             return (
