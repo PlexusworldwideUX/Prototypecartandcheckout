@@ -4,7 +4,7 @@
  * All text uses content system keys for edit mode.
  */
 import React from 'react';
-import { Trash2, Check, Square, AlertTriangle } from 'lucide-react';
+import { Check, Square, AlertTriangle, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import type { CartItem } from '../store/cart-context';
 import { useContent } from '../store/content-context';
@@ -36,7 +36,20 @@ export function CartItemCard1({
 
   return (
     <div className="bg-white border-b border-[#e0e0e0] p-5 mb-0 relative">
-      <div className="flex gap-4 items-start">
+      {/* X remove button — top right */}
+      <div className="relative group/remove">
+        <button
+          className="absolute top-0 right-0 text-[#999] cursor-pointer bg-transparent border-none p-1 transition-colors hover:text-[#C8102E]"
+          onClick={onRemove}
+          aria-label="Remove item from cart"
+        >
+          <X size={16} />
+        </button>
+        <span className="pointer-events-none absolute right-6 top-0 whitespace-nowrap rounded-md bg-[#1a1a1a] text-white px-2.5 py-1 opacity-0 group-hover/remove:opacity-100 transition-opacity z-10" style={{ fontSize: '11px', fontWeight: 500 }}>
+          Remove item from cart
+        </span>
+      </div>
+      <div className="flex gap-4 items-start pr-5">
         {/* Image + Trash */}
         <div className="flex flex-col items-center flex-shrink-0">
           <EI
@@ -45,12 +58,6 @@ export function CartItemCard1({
             className="w-full h-full object-cover"
             containerClassName="w-[72px] h-[72px] rounded-lg overflow-hidden"
           />
-          <button
-            className="text-[#c00] cursor-pointer p-1.5 rounded-md transition-colors hover:bg-[#fce8e8] bg-transparent border-none flex items-center justify-center mt-2"
-            onClick={onRemove}
-          >
-            <Trash2 size={18} />
-          </button>
         </div>
 
         <div className="flex-1 min-w-0">
