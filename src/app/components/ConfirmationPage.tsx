@@ -53,9 +53,7 @@ export function ConfirmationPage() {
       {/* ─── HERO ─── */}
       <div
         className="text-center py-12 px-6 rounded-2xl mb-8"
-        style={{
-          background: 'linear-gradient(180deg, #fdf2f3 0%, #ffffff 100%)',
-        }}
+        style={{ background: 'linear-gradient(180deg, #fdf2f3 0%, #ffffff 100%)' }}
       >
         <div className="w-[64px] h-[64px] bg-[#C8102E] rounded-full flex items-center justify-center mx-auto mb-5">
           <CheckCircle size={32} className="text-white" />
@@ -87,86 +85,11 @@ export function ConfirmationPage() {
         </div>
       </div>
 
-      {/* ─── ORDER STATUS & SHIPPING (3-column, no vertical dividers) ─── */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-0">
-        {/* Column 1: Order Status */}
-        <div className="py-6 px-4">
-          <h3 style={{ fontSize: '12px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '1px', color: '#999', marginBottom: '0px', paddingBottom: '8px', borderBottom: '2px solid #e0e0e0', display: 'inline-block' }}>
-            <ET k="confirmation.orderStatusTitle" />
-          </h3>
-          <div className="flex mt-4 mb-4">
-            <div className="inline-flex items-center gap-1.5 bg-[#e8f4fd] text-[#1565c0] py-1.5 px-3 rounded-full" style={{ fontSize: '13px', fontWeight: 600 }}>
-              <div className="w-2 h-2 bg-[#1565c0] rounded-full animate-pulse" />
-              <ET k="confirmation.beingProcessed" />
-            </div>
-          </div>
-          <div style={{ fontSize: '14px', color: '#555', lineHeight: 1.8 }}>
-            <div><span style={{ fontWeight: 600 }}><ET k="confirmation.orderNumberLabel" /></span> <ET k="confirmation.orderNumber" /></div>
-            <div><span style={{ fontWeight: 600 }}><ET k="confirmation.placedLabel" /></span> <ET k="confirmation.placedDate" /></div>
-          </div>
-        </div>
+      {/* ─── ORDER SUMMARY (left) + ORDER STATUS/SHIPPING/DELIVERY (right) ─── */}
+      <div className="grid grid-cols-1 md:grid-cols-[1fr_1fr] gap-6 mb-8">
 
-        {/* Column 2: Shipping To */}
-        <div className="py-6 px-4">
-          <h3 style={{ fontSize: '12px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '1px', color: '#999', marginBottom: '0px', paddingBottom: '8px', borderBottom: '2px solid #e0e0e0', display: 'inline-block' }}>
-            <ET k="confirmation.shippingToTitle" />
-          </h3>
-          <div className="mt-3.5" style={{ fontSize: '14px', lineHeight: 1.8 }}>
-            <strong>{name}</strong><br />
-            {addr}<br />
-            {cityLine}<br />
-            <span className="text-[#888]">{phone}</span>
-          </div>
-        </div>
-
-        {/* Column 3: Expected Delivery */}
-        <div className="py-6 px-4">
-          <h3 style={{ fontSize: '12px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '1px', color: '#999', marginBottom: '0px', paddingBottom: '8px', borderBottom: '2px solid #e0e0e0', display: 'inline-block' }}>
-            <ET k="confirmation.expectedDeliveryTitle" />
-          </h3>
-          <div className="flex items-start gap-2.5 mt-3.5">
-            <Package size={18} className="text-[#C8102E] flex-shrink-0 mt-0.5" />
-            <div style={{ fontSize: '14px', fontWeight: 600, lineHeight: 1.5 }}>
-              <ET k="confirmation.expectedDeliveryDateTime" />
-            </div>
-          </div>
-          <button
-            className="inline-flex items-center gap-1.5 bg-transparent border-none text-[#C8102E] cursor-pointer mt-4 p-0 transition-colors hover:text-[#a00d24]"
-            style={{ fontSize: '14px', fontWeight: 600 }}
-            onClick={() => toast('Opening order support...')}
-          >
-            <HelpCircle size={15} />
-            <ET k="confirmation.orderSupportBtn" />
-            <ArrowRight size={14} />
-          </button>
-        </div>
-      </div>
-
-      {/* ─── TIMELINE + ORDER SUMMARY (2-column) ─── */}
-      <div className="grid grid-cols-1 lg:grid-cols-[1fr_360px] gap-8 py-8">
-        {/* Timeline — left on desktop, bottom on mobile */}
-        <div
-          className="order-2 lg:order-1"
-          style={{
-            border: '1px solid #e0e0e0',
-            borderRadius: '12px',
-            padding: '24px',
-          }}
-        >
-          <SubscriptionTimeline hasSubscription={hasSubscription} />
-        </div>
-
-        {/* Order Summary — right on desktop, top on mobile */}
-        <div
-          className="order-1 lg:order-2"
-          style={{
-            /* ── Adjustable border styling ── */
-            border: '1px solid #e0e0e0',
-            borderRadius: '12px',
-            padding: '24px',
-            /* To adjust: change border color, width, radius, or padding above */
-          }}
-        >
+        {/* LEFT: Order Summary */}
+        <div style={{ border: '1px solid #e0e0e0', borderRadius: '12px', padding: '24px' }}>
           <h3 style={{ fontSize: '12px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '1px', color: '#999', marginBottom: '16px' }}>
             <ET k="confirmation.orderSummaryTitle" />
           </h3>
@@ -200,29 +123,69 @@ export function ConfirmationPage() {
             <span style={{ fontSize: '20px', fontWeight: 800 }}>${total.toFixed(2)}</span>
           </div>
         </div>
+
+        {/* RIGHT: Order Status + Shipping + Delivery stacked */}
+        <div className="flex flex-col gap-4">
+          {/* Order Status */}
+          <div style={{ border: '1px solid #e0e0e0', borderRadius: '12px', padding: '20px' }}>
+            <h3 style={{ fontSize: '12px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '1px', color: '#999', marginBottom: '12px' }}>
+              <ET k="confirmation.orderStatusTitle" />
+            </h3>
+            <div className="flex mb-3">
+              <div className="inline-flex items-center gap-1.5 bg-[#e8f4fd] text-[#1565c0] py-1.5 px-3 rounded-full" style={{ fontSize: '13px', fontWeight: 600 }}>
+                <div className="w-2 h-2 bg-[#1565c0] rounded-full animate-pulse" />
+                <ET k="confirmation.beingProcessed" />
+              </div>
+            </div>
+            <div style={{ fontSize: '14px', color: '#555', lineHeight: 1.8 }}>
+              <div><span style={{ fontWeight: 600 }}><ET k="confirmation.orderNumberLabel" /></span> <ET k="confirmation.orderNumber" /></div>
+              <div><span style={{ fontWeight: 600 }}><ET k="confirmation.placedLabel" /></span> <ET k="confirmation.placedDate" /></div>
+            </div>
+          </div>
+
+          {/* Shipping To */}
+          <div style={{ border: '1px solid #e0e0e0', borderRadius: '12px', padding: '20px' }}>
+            <h3 style={{ fontSize: '12px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '1px', color: '#999', marginBottom: '12px' }}>
+              <ET k="confirmation.shippingToTitle" />
+            </h3>
+            <div style={{ fontSize: '14px', lineHeight: 1.8 }}>
+              <strong>{name}</strong><br />
+              {addr}<br />
+              {cityLine}<br />
+              <span className="text-[#888]">{phone}</span>
+            </div>
+          </div>
+
+          {/* Expected Delivery */}
+          <div style={{ border: '1px solid #e0e0e0', borderRadius: '12px', padding: '20px' }}>
+            <h3 style={{ fontSize: '12px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '1px', color: '#999', marginBottom: '12px' }}>
+              <ET k="confirmation.expectedDeliveryTitle" />
+            </h3>
+            <div className="flex items-start gap-2.5">
+              <Package size={18} className="text-[#C8102E] flex-shrink-0 mt-0.5" />
+              <div style={{ fontSize: '14px', fontWeight: 600, lineHeight: 1.5 }}>
+                <ET k="confirmation.expectedDeliveryDateTime" />
+              </div>
+            </div>
+            <button
+              className="inline-flex items-center gap-1.5 bg-transparent border-none text-[#C8102E] cursor-pointer mt-3 p-0 transition-colors hover:text-[#a00d24]"
+              style={{ fontSize: '14px', fontWeight: 600 }}
+              onClick={() => toast('Opening order support...')}
+            >
+              <HelpCircle size={15} />
+              <ET k="confirmation.orderSupportBtn" />
+              <ArrowRight size={14} />
+            </button>
+          </div>
+        </div>
       </div>
 
-      {/* ─── SURVEY (personalized with first name) ─── */}
-      <div
-        className="rounded-xl p-7 text-white text-center my-8"
-        style={{ background: 'linear-gradient(135deg, #C8102E, #a00d24)' }}
-      >
-        <h3 style={{ fontFamily: "'DM Sans', sans-serif", fontSize: '22px', marginBottom: '8px' }}>
-          <strong>{firstName}</strong>, <ET k="confirmation.surveyTitle" />
-        </h3>
-        <p style={{ fontSize: '14px', opacity: 0.9, marginBottom: '16px' }}>
-          <ET k="confirmation.surveyText" />
-        </p>
-        <button
-          className="bg-white text-[#C8102E] py-3 px-7 rounded-lg border-none cursor-pointer transition-all hover:-translate-y-0.5"
-          style={{ fontSize: '14px', fontWeight: 700, fontFamily: "'DM Sans', sans-serif" }}
-          onClick={() => toast.success('Survey opened - thank you!')}
-        >
-          <ET k="confirmation.surveyBtn" />
-        </button>
+      {/* ─── TIMELINE ─── */}
+      <div className="mb-8" style={{ border: '1px solid #e0e0e0', borderRadius: '12px', padding: '24px' }}>
+        <SubscriptionTimeline hasSubscription={hasSubscription} />
       </div>
 
-      {/* ─── INVITE (centered, outlined button) ─── */}
+      {/* ─── INVITE ─── */}
       <div className="py-8 text-center">
         <h3 style={{ fontSize: '16px', fontWeight: 700, marginBottom: '4px' }}><ET k="confirmation.inviteTitle" /></h3>
         <p style={{ fontSize: '13px', color: '#555', marginBottom: '12px' }}><ET k="confirmation.inviteSubtitle" /></p>
@@ -243,6 +206,26 @@ export function ConfirmationPage() {
             <ET k="confirmation.inviteBtn" />
           </button>
         </div>
+      </div>
+
+      {/* ─── SURVEY ─── */}
+      <div
+        className="rounded-xl p-7 text-white text-center my-8"
+        style={{ background: 'linear-gradient(135deg, #C8102E, #a00d24)' }}
+      >
+        <h3 style={{ fontFamily: "'DM Sans', sans-serif", fontSize: '22px', marginBottom: '8px' }}>
+          <strong>{firstName}</strong>, <ET k="confirmation.surveyTitle" />
+        </h3>
+        <p style={{ fontSize: '14px', opacity: 0.9, marginBottom: '16px' }}>
+          <ET k="confirmation.surveyText" />
+        </p>
+        <button
+          className="bg-white text-[#C8102E] py-3 px-7 rounded-lg border-none cursor-pointer transition-all hover:-translate-y-0.5"
+          style={{ fontSize: '14px', fontWeight: 700, fontFamily: "'DM Sans', sans-serif" }}
+          onClick={() => toast.success('Survey opened - thank you!')}
+        >
+          <ET k="confirmation.surveyBtn" />
+        </button>
       </div>
 
       {/* ─── PRODUCTS TO COMPLETE JOURNEY ─── */}

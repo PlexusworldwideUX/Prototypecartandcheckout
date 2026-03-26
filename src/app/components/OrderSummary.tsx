@@ -79,9 +79,9 @@ export function OrderSummary({
 
   return (
     <div>
-      {/* Progress rewards — outside grey container, visible on all screen sizes */}
+      {/* Progress rewards — outside grey container, desktop only (mobile shows in sticky header) */}
       {showProgress && (
-        <div className="mb-2">
+        <div className="hidden lg:block mb-2">
           <ProgressRewards variant="desktop" />
         </div>
       )}

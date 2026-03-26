@@ -1,4 +1,4 @@
-import { ShoppingCart, User, HelpCircle, Globe, Menu, X, ChevronRight, Copy, LogOut, ChevronDown } from 'lucide-react';
+import { ShoppingCart, User, HelpCircle, Globe, Menu, X, ChevronRight, Copy, LogOut, ChevronDown, Search } from 'lucide-react';
 import { useCart } from '../store/cart-context';
 import { useContent } from '../store/content-context';
 import { useState, useEffect, useRef } from 'react';
@@ -6,9 +6,10 @@ import { ET } from './EditableText';
 import { EI } from './EditableImage';
 import { toast } from 'sonner';
 import { AuthModal } from './AuthPage';
+import { SUGGESTED_PRODUCTS } from '../store/cart-context';
 
 export function Header() {
-  const { getItemCount, setPage, userName, logOut, setAuthReturnPage, currentPage, resetCartToDefaults } = useCart();
+  const { getItemCount, setPage, userName, logOut, setAuthReturnPage, currentPage, resetCartToDefaults, addSuggestedToCart } = useCart();
   const { isEditMode, setEditMode, copyState } = useContent();
   const count = getItemCount();
   const isOnConfirmation = currentPage === 'confirmation';
@@ -16,6 +17,10 @@ export function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [authModalOpen, setAuthModalOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const searchRef = useRef<HTMLDivElement>(null);
+  const searchInputRef = useRef<HTMLInputElement>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const dropdownTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -33,6 +38,29 @@ export function Header() {
     copyState();
     toast.success('State copied to clipboard!');
   };
+
+  // Close search on outside click
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (searchRef.current && !searchRef.current.contains(e.target as Node)) {
+        setSearchOpen(false);
+        setSearchQuery('');
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  // Focus input when search opens
+  useEffect(() => {
+    if (searchOpen) searchInputRef.current?.focus();
+  }, [searchOpen]);
+
+  const filteredProducts = searchQuery.trim()
+    ? SUGGESTED_PRODUCTS.filter(p =>
+        p.name.toLowerCase().includes(searchQuery.toLowerCase())
+      )
+    : SUGGESTED_PRODUCTS;
 
   const handleDropdownEnter = () => {
     if (dropdownTimerRef.current) clearTimeout(dropdownTimerRef.current);
@@ -124,6 +152,80 @@ export function Header() {
 
             {/* Right-side utilities */}
             <div className="flex items-center gap-5">
+
+              {/* Search — expands inline when open */}
+              <div ref={searchRef} className="relative flex items-center">
+                {searchOpen ? (
+                  <div className="flex items-center gap-2">
+                    <Search size={18} className="text-[#555] flex-shrink-0" />
+                    <input
+                      ref={searchInputRef}
+                      type="text"
+                      value={searchQuery}
+                      onChange={e => setSearchQuery(e.target.value)}
+                      placeholder="Search products..."
+                      className="border-b border-[#555] bg-transparent outline-none"
+                      style={{ fontSize: '14px', width: '180px', fontFamily: "'DM Sans', sans-serif", paddingBottom: '2px' }}
+                    />
+                    <button
+                      className="text-[#555] bg-transparent border-none cursor-pointer p-0 hover:text-[#C8102E] transition-colors"
+                      onClick={() => { setSearchOpen(false); setSearchQuery(''); }}
+                    >
+                      <X size={16} />
+                    </button>
+                  </div>
+                ) : (
+                  <button
+                    className="text-[#555] bg-transparent border-none cursor-pointer p-0 flex items-center gap-1 hover:text-[#C8102E] transition-colors"
+                    style={{ fontSize: '14px', fontWeight: 500 }}
+                    onClick={() => setSearchOpen(true)}
+                  >
+                    <Search size={18} />
+                  </button>
+                )}
+
+                {/* Search dropdown */}
+                {searchOpen && (
+                  <div
+                    className="absolute top-full right-0 mt-3 bg-white rounded-xl shadow-xl border border-[#e8e8e8] z-[200] overflow-hidden"
+                    style={{ width: '340px', fontFamily: "'DM Sans', sans-serif" }}
+                  >
+                    {filteredProducts.length === 0 ? (
+                      <div className="px-4 py-6 text-center text-[#999]" style={{ fontSize: '13px' }}>No products found</div>
+                    ) : (
+                      filteredProducts.slice(0, 4).map(sp => {
+                        const displayPrice = sp.price;
+                        const retailPrice = sp.retailPrice;
+                        return (
+                          <div key={sp.id} className="flex gap-3 p-3 border-b border-[#f0f0f0] last:border-0 hover:bg-[#f9f9f9] transition-colors">
+                            <img src={sp.image} alt={sp.name} className="w-14 h-14 object-contain rounded-lg bg-[#f5f5f5] flex-shrink-0" />
+                            <div className="flex-1 min-w-0">
+                              <div style={{ fontSize: '14px', fontWeight: 600, color: '#1a1a1a' }}>{sp.name}</div>
+                              <div style={{ fontSize: '12px', color: '#888', fontStyle: 'italic' }}>{sp.subtitle || 'Options Available'}</div>
+                              <div className="flex items-baseline gap-2 mt-1">
+                                <span style={{ fontSize: '15px', fontWeight: 700, color: '#1a1a1a' }}>${displayPrice.toFixed(2)}</span>
+                                <span style={{ fontSize: '12px', color: '#C8102E', fontWeight: 600 }}>${(displayPrice).toFixed(2)} VIP</span>
+                              </div>
+                            </div>
+                            <button
+                              className="self-end bg-[#1a1a1a] text-white px-3 py-2 rounded-full border-none cursor-pointer hover:bg-[#333] transition-colors flex-shrink-0"
+                              style={{ fontSize: '12px', fontWeight: 600 }}
+                              onClick={() => {
+                                addSuggestedToCart(sp);
+                                toast.success(`${sp.name} added to cart!`);
+                                setSearchOpen(false);
+                                setSearchQuery('');
+                              }}
+                            >
+                              Add to Cart
+                            </button>
+                          </div>
+                        );
+                      })
+                    )}
+                  </div>
+                )}
+              </div>
               {/* Desktop: User / Login with dropdown */}
               <div
                 className="relative"

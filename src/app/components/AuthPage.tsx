@@ -73,9 +73,11 @@ function FacebookIcon() {
 
 function PlexusWordmark() {
   return (
-    <div className="inline-flex items-center justify-center px-3 py-1.5 rounded-sm" style={{ background: '#1a1a1a', fontSize: '20px', fontWeight: 800, color: '#fff', letterSpacing: '-0.5px', fontFamily: 'serif' }}>
-      plexus
-    </div>
+    <img
+      src="https://static.plexusworldwide.com/image/upload/v1773174447/dnun56agp76ys85fmhka.png"
+      alt="Plexus"
+      style={{ height: '36px', width: 'auto', display: 'block' }}
+    />
   );
 }
 

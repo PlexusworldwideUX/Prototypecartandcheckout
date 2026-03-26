@@ -446,7 +446,7 @@ export function CheckoutPage() {
 
   return (
     <>
-    <div className="max-w-[1280px] mx-auto px-6 py-8 pb-28">
+    <div className="max-w-[1280px] mx-auto px-6 py-8 lg:pb-8 pb-28">
       {/* Back to Cart */}
       <button
         className="flex items-center gap-1 bg-transparent border-none text-[#555] cursor-pointer hover:text-[#C8102E] transition-colors mb-4"
@@ -674,6 +674,15 @@ export function CheckoutPage() {
                       </div>
                       </div>{/* end fields container */}
 
+                      {/* Desktop inline button */}
+                      <button
+                        className="hidden lg:block w-full bg-[#C8102E] text-white py-3 rounded-full border-none cursor-pointer transition-all hover:bg-[#a00d24] mt-4"
+                        style={{ fontSize: '15px', fontWeight: 600 }}
+                        onClick={handleEnrollmentSave}
+                      >
+                        Save and Continue
+                      </button>
+
                     </div>
                   </motion.div>
                 )}
@@ -743,6 +752,14 @@ export function CheckoutPage() {
                       <FieldGroup label={get('checkout.zipLabel')} value={sf.zip} onChange={v => setSf(p => ({ ...p, zip: v }))} maxLength={5} />
                       <FieldGroup label={get('checkout.phoneLabel')} value={sf.phone} onChange={v => setSf(p => ({ ...p, phone: v }))} type="tel" />
                     </div>
+                    {/* Desktop inline button */}
+                    <button
+                      className="hidden lg:block w-full bg-[#C8102E] text-white py-3 rounded-full border-none cursor-pointer transition-all hover:bg-[#a00d24] mt-2"
+                      style={{ fontSize: '15px', fontWeight: 600 }}
+                      onClick={handleShippingSaveAndContinue}
+                    >
+                      Save and Continue
+                    </button>
                   </div>
                 </motion.div>
               )}
@@ -943,6 +960,14 @@ export function CheckoutPage() {
                       )}
                     </div>
 
+                    {/* Desktop inline button */}
+                    <button
+                      className="hidden lg:block w-full bg-[#C8102E] text-white py-3 rounded-full border-none cursor-pointer transition-all hover:bg-[#a00d24] mt-5"
+                      style={{ fontSize: '15px', fontWeight: 600 }}
+                      onClick={handleSavePayment}
+                    >
+                      Save and Continue
+                    </button>
                   </div>
                 </motion.div>
               )}
@@ -1085,6 +1110,18 @@ export function CheckoutPage() {
                         </div>
                       </div>
                     )}
+
+                    {/* Desktop inline Place Order button */}
+                    <button
+                      className={`hidden lg:block w-full py-3.5 rounded-full border-none text-white mt-5 transition-all ${
+                        canPlaceOrder ? 'bg-[#C8102E] cursor-pointer hover:bg-[#a00d24]' : 'bg-[#ccc] cursor-not-allowed'
+                      }`}
+                      style={{ fontSize: '16px', fontWeight: 600 }}
+                      disabled={!canPlaceOrder}
+                      onClick={() => canPlaceOrder && setPage('confirmation')}
+                    >
+                      <ET k="checkout.placeOrderBtn" />
+                    </button>
                   </div>
                 </motion.div>
               )}
@@ -1161,9 +1198,9 @@ export function CheckoutPage() {
       )}
     </div>
 
-    {/* Sticky bottom button */}
+    {/* Sticky bottom button — mobile only */}
     <div
-      className="fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-[#e0e0e0] px-6 py-4"
+      className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-[#e0e0e0] px-6 py-4"
       style={{ boxShadow: '0 -4px 16px rgba(0,0,0,0.08)' }}
     >
       <div className="max-w-[1280px] mx-auto">

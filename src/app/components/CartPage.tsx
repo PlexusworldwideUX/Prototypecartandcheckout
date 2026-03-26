@@ -525,9 +525,7 @@ function MembershipCard({ onRemove, membershipPrice }: { onRemove: () => void; m
           <div style={{ fontSize: '13px', color: '#555', marginTop: '1px' }}>
             <ET k="membership.description" />
           </div>
-        </div>
-        <div className="text-right flex-shrink-0">
-          <div style={{ fontSize: '16px', fontWeight: 700 }}>${membershipPrice.toFixed(2)}</div>
+          <div style={{ fontSize: '16px', fontWeight: 700, marginTop: '6px' }}>${membershipPrice.toFixed(2)}</div>
         </div>
       </div>
     </div>

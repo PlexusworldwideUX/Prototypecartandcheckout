@@ -289,20 +289,16 @@ const SUGGESTED_PRODUCTS_TEMPLATE: SuggestedProductEntry[] = [
     id: 'bioCleanse',
     name: 'Plexus Bio Cleanse',
     subtitle: 'Options Available',
-    memberPrice: 0,
-    pv: 0,
+    memberPrice: 31,
+    pv: 25,
     image: 'https://images.ctfassets.net/bzyfwm1ddxnx/7t74v6NKtwGdVzEpBsZnwi/44dd629624707b60d8d2cf538e21a705/us-silo-biocleanse-120.png',
     showProp65: false,
     optionStyle: 'multiple',
-    optionsPrice: true,
+    optionsPrice: false,
     dropdownCount: 1,
     dropdowns: [
       { options: ['Bio Cleanse - 120 Capsules', 'Bio Cleanse - 180 Capsules'] },
     ],
-    optionPriceTotal: {
-      'Bio Cleanse - 120 Capsules': { price: 31, pv: 25 },
-      'Bio Cleanse - 180 Capsules': { price: 42, pv: 35 },
-    },
   },
 
   // ── Product 3 ──────────────────────────────────────────────────
