@@ -51,10 +51,7 @@ export function ConfirmationPage() {
   return (
     <div className="max-w-[1280px] mx-auto px-6 py-10">
       {/* ─── HERO ─── */}
-      <div
-        className="text-center py-12 px-6 rounded-2xl mb-8"
-        style={{ background: 'linear-gradient(180deg, #fdf2f3 0%, #ffffff 100%)' }}
-      >
+      <div className="text-center py-10 px-6 mb-8">
         <div className="w-[64px] h-[64px] bg-[#C8102E] rounded-full flex items-center justify-center mx-auto mb-5">
           <CheckCircle size={32} className="text-white" />
         </div>
@@ -124,59 +121,55 @@ export function ConfirmationPage() {
           </div>
         </div>
 
-        {/* RIGHT: Order Status + Shipping + Delivery stacked */}
-        <div className="flex flex-col gap-4">
+        {/* RIGHT: Order Status + Shipping + Delivery — single card */}
+        <div style={{ border: '1px solid #e0e0e0', borderRadius: '12px', padding: '24px' }}>
           {/* Order Status */}
-          <div style={{ border: '1px solid #e0e0e0', borderRadius: '12px', padding: '20px' }}>
-            <h3 style={{ fontSize: '12px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '1px', color: '#999', marginBottom: '12px' }}>
-              <ET k="confirmation.orderStatusTitle" />
-            </h3>
-            <div className="flex mb-3">
-              <div className="inline-flex items-center gap-1.5 bg-[#e8f4fd] text-[#1565c0] py-1.5 px-3 rounded-full" style={{ fontSize: '13px', fontWeight: 600 }}>
-                <div className="w-2 h-2 bg-[#1565c0] rounded-full animate-pulse" />
-                <ET k="confirmation.beingProcessed" />
-              </div>
-            </div>
-            <div style={{ fontSize: '14px', color: '#555', lineHeight: 1.8 }}>
-              <div><span style={{ fontWeight: 600 }}><ET k="confirmation.orderNumberLabel" /></span> <ET k="confirmation.orderNumber" /></div>
-              <div><span style={{ fontWeight: 600 }}><ET k="confirmation.placedLabel" /></span> <ET k="confirmation.placedDate" /></div>
+          <h3 style={{ fontSize: '12px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '1px', color: '#999', marginBottom: '12px' }}>
+            <ET k="confirmation.orderStatusTitle" />
+          </h3>
+          <div className="flex mb-3">
+            <div className="inline-flex items-center gap-1.5 bg-[#e8f4fd] text-[#1565c0] py-1.5 px-3 rounded-full" style={{ fontSize: '13px', fontWeight: 600 }}>
+              <div className="w-2 h-2 bg-[#1565c0] rounded-full animate-pulse" />
+              <ET k="confirmation.beingProcessed" />
             </div>
           </div>
+          <div style={{ fontSize: '14px', color: '#555', lineHeight: 1.8, marginBottom: '20px' }}>
+            <div><span style={{ fontWeight: 600 }}><ET k="confirmation.orderNumberLabel" /></span> <ET k="confirmation.orderNumber" /></div>
+            <div><span style={{ fontWeight: 600 }}><ET k="confirmation.placedLabel" /></span> <ET k="confirmation.placedDate" /></div>
+          </div>
+          <hr className="border-t border-[#e0e0e0] mb-5" />
 
           {/* Shipping To */}
-          <div style={{ border: '1px solid #e0e0e0', borderRadius: '12px', padding: '20px' }}>
-            <h3 style={{ fontSize: '12px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '1px', color: '#999', marginBottom: '12px' }}>
-              <ET k="confirmation.shippingToTitle" />
-            </h3>
-            <div style={{ fontSize: '14px', lineHeight: 1.8 }}>
-              <strong>{name}</strong><br />
-              {addr}<br />
-              {cityLine}<br />
-              <span className="text-[#888]">{phone}</span>
-            </div>
+          <h3 style={{ fontSize: '12px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '1px', color: '#999', marginBottom: '12px' }}>
+            <ET k="confirmation.shippingToTitle" />
+          </h3>
+          <div style={{ fontSize: '14px', lineHeight: 1.8, marginBottom: '20px' }}>
+            <strong>{name}</strong><br />
+            {addr}<br />
+            {cityLine}<br />
+            <span className="text-[#888]">{phone}</span>
           </div>
+          <hr className="border-t border-[#e0e0e0] mb-5" />
 
           {/* Expected Delivery */}
-          <div style={{ border: '1px solid #e0e0e0', borderRadius: '12px', padding: '20px' }}>
-            <h3 style={{ fontSize: '12px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '1px', color: '#999', marginBottom: '12px' }}>
-              <ET k="confirmation.expectedDeliveryTitle" />
-            </h3>
-            <div className="flex items-start gap-2.5">
-              <Package size={18} className="text-[#C8102E] flex-shrink-0 mt-0.5" />
-              <div style={{ fontSize: '14px', fontWeight: 600, lineHeight: 1.5 }}>
-                <ET k="confirmation.expectedDeliveryDateTime" />
-              </div>
+          <h3 style={{ fontSize: '12px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '1px', color: '#999', marginBottom: '12px' }}>
+            <ET k="confirmation.expectedDeliveryTitle" />
+          </h3>
+          <div className="flex items-start gap-2.5">
+            <Package size={18} className="text-[#C8102E] flex-shrink-0 mt-0.5" />
+            <div style={{ fontSize: '14px', fontWeight: 600, lineHeight: 1.5 }}>
+              <ET k="confirmation.expectedDeliveryDateTime" />
             </div>
-            <button
-              className="inline-flex items-center gap-1.5 bg-transparent border-none text-[#C8102E] cursor-pointer mt-3 p-0 transition-colors hover:text-[#a00d24]"
-              style={{ fontSize: '14px', fontWeight: 600 }}
-              onClick={() => toast('Opening order support...')}
-            >
-              <HelpCircle size={15} />
-              <ET k="confirmation.orderSupportBtn" />
-              <ArrowRight size={14} />
-            </button>
           </div>
+          <button
+            className="inline-flex items-center gap-1.5 bg-transparent border-none text-[#C8102E] cursor-pointer mt-3 p-0 transition-colors hover:text-[#a00d24]"
+            style={{ fontSize: '14px', fontWeight: 600 }}
+            onClick={() => toast('Opening order support...')}
+          >
+            <HelpCircle size={15} />
+            <ET k="confirmation.orderSupportBtn" />
+            <ArrowRight size={14} />
+          </button>
         </div>
       </div>
 
