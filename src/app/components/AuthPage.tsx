@@ -135,10 +135,9 @@ export function AuthHub({ initialView, onSuccess }: { initialView: AuthView; onS
   // ── Sign In Hub ─────────────────────────────────────────────────────────────
   if (view === 'signIn') return (
     <div className="flex flex-col items-center w-full">
-      <div className="flex items-center gap-3 mb-10">
-        <span style={{ fontSize: '28px', fontWeight: 700, fontFamily: 'serif', color: '#1a1a1a' }}>Sign In</span>
-        <PlexusWordmark />
-      </div>
+      <h1 style={{ fontSize: '32px', fontWeight: 700, fontFamily: 'serif', color: '#1a1a1a', textAlign: 'center', marginBottom: '32px' }}>
+        Sign In
+      </h1>
       <div className="flex flex-col items-center gap-3 w-full" style={{ maxWidth: '340px' }}>
         <SSOButton icon={<GoogleIcon />} label="Sign in with Google" onClick={() => setSsoProvider('google')} />
         <SSOButton icon={<FacebookIcon />} label="Sign in with Facebook" onClick={() => setSsoProvider('facebook')} />
@@ -162,10 +161,9 @@ export function AuthHub({ initialView, onSuccess }: { initialView: AuthView; onS
   // ── Join Hub ────────────────────────────────────────────────────────────────
   if (view === 'join') return (
     <div className="flex flex-col items-center w-full">
-      <div className="flex items-center gap-3 mb-10">
-        <span style={{ fontSize: '28px', fontWeight: 700, fontFamily: 'serif', color: '#1a1a1a' }}>Join</span>
-        <PlexusWordmark />
-      </div>
+      <h1 style={{ fontSize: '32px', fontWeight: 700, fontFamily: 'serif', color: '#1a1a1a', textAlign: 'center', marginBottom: '32px' }}>
+        Join
+      </h1>
       <div className="flex flex-col items-center gap-3 w-full" style={{ maxWidth: '340px' }}>
         <SSOButton icon={<GoogleIcon />} label="Sign up with Google" onClick={() => setSsoProvider('google')} />
         <SSOButton icon={<FacebookIcon />} label="Sign up with Facebook" onClick={() => setSsoProvider('facebook')} />

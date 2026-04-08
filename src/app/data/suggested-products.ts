@@ -327,6 +327,19 @@ const SUGGESTED_PRODUCTS_TEMPLATE: SuggestedProductEntry[] = [
     optionsPrice: false,
   },
 
+  // ── Slim & Trim Combo (Special Offer) ─────────────────────────
+  {
+    id: 'slimTrim',
+    name: 'Slim & Trim Combo',
+    subtitle: '30 Packets',
+    memberPrice: 79,
+    pv: 72,
+    image: 'https://images.ctfassets.net/bzyfwm1ddxnx/1AMbPy8TVaygEzEvjioIdW/5cb1ee489849de6f2ee42be5585909b1/us-silo-slim-hc-boll-bag.png',
+    showProp65: false,
+    optionStyle: 'none',
+    optionsPrice: false,
+  },
+
   // ── Add more products below ────────────────────────────────────
   // Copy an entry above, change the id, and fill in all fields.
   // The product will automatically appear in the suggestion pool.

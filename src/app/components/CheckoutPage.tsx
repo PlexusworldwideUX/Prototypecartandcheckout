@@ -646,8 +646,8 @@ export function CheckoutPage() {
                       {/* Referral site name */}
                       <div className="mb-3.5">
                         <div className="flex items-center gap-1 mb-1">
-                          <label style={{ fontSize: '12px', fontWeight: 600, color: '#555', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
-                            Enter your unique referral site name
+                          <label style={{ fontSize: '12px', fontWeight: 700, color: '#333', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                            Customize your unique referral link
                           </label>
                           <span className="text-[#C8102E]" style={{ fontSize: '12px', fontWeight: 600 }}>(required)</span>
                           <Info size={13} className="text-[#999] cursor-help" />
@@ -671,6 +671,9 @@ export function CheckoutPage() {
                             style={{ fontSize: '14px', fontFamily: "'DM Sans', sans-serif" }}
                           />
                         </div>
+                        <p className="mt-2" style={{ fontSize: '11px', fontWeight: 700, color: '#333', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                          Use this link to share your favorite products and get credit when someone buys!
+                        </p>
                       </div>
                       </div>{/* end fields container */}
 

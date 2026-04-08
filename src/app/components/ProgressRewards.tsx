@@ -45,7 +45,7 @@ export function ProgressRewards({ variant = 'mobile' }: ProgressRewardsProps) {
             transform: 'translateY(-50%)',
             zIndex: 0,
             borderRadius: '2px',
-            background: '#e0d0d2',
+            background: '#d1d5db',
           }} />
 
           {/* Animated red fill — same scope */}
@@ -71,14 +71,14 @@ export function ProgressRewards({ variant = 'mobile' }: ProgressRewardsProps) {
                   width: `${DOT}px`,
                   height: `${DOT}px`,
                   borderRadius: '50%',
-                  background: achieved ? '#C8102E' : '#ffffff',
-                  border: '2px solid #C8102E',
-                  boxShadow: '0 0 0 4px #ffffff',
+                  background: achieved ? '#C8102E' : '#9ca3af',
+                  border: `2px solid ${achieved ? '#C8102E' : '#6b7280'}`,
+                  boxShadow: `0 0 0 4px #ffffff`,
                   flexShrink: 0,
                   boxSizing: 'border-box',
                   transition: 'background 0.3s ease',
                 }} />
-                <span style={{ fontSize: '11px', fontWeight: 600, color: '#C8102E', whiteSpace: 'nowrap', textAlign: 'center' }}>
+                <span style={{ fontSize: '11px', fontWeight: 600, color: achieved ? '#C8102E' : '#6b7280', whiteSpace: 'nowrap', textAlign: 'center' }}>
                   {m.label}
                 </span>
               </div>
@@ -92,7 +92,7 @@ export function ProgressRewards({ variant = 'mobile' }: ProgressRewardsProps) {
           marginLeft: '10px',
           fontSize: '15px',
           fontWeight: 700,
-          color: '#C8102E',
+          color: rightAmount > 0 ? '#C8102E' : '#6b7280',
           whiteSpace: 'nowrap',
           lineHeight: `${DOT}px`,
         }}>

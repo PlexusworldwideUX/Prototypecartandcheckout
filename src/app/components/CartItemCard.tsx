@@ -132,7 +132,7 @@ export function CartItemCard({
                             {group.flavors.map(f => (
                               <div key={f.name} className="relative group/swatch">
                                 <button
-                                  className={`w-[30px] h-[30px] rounded-full cursor-pointer transition-all hover:scale-110 border-none ${
+                                  className={`w-[16px] h-[16px] rounded-full cursor-pointer transition-all hover:scale-110 border-none ${
                                     item.selectedFlavor === f.name
                                       ? 'ring-2 ring-[#C8102E] ring-offset-2'
                                       : ''

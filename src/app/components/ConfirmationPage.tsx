@@ -83,6 +83,11 @@ export function ConfirmationPage() {
       </div>
 
       {/* ─── ORDER SUMMARY (left) + ORDER STATUS/SHIPPING/DELIVERY (right) ─── */}
+      {/* ─── TIMELINE — above order summary per image 10 ─── */}
+      <div className="mb-8" style={{ border: '1px solid #e0e0e0', borderRadius: '12px', padding: '24px' }}>
+        <SubscriptionTimeline hasSubscription={hasSubscription} />
+      </div>
+
       <div className="grid grid-cols-1 md:grid-cols-[1fr_1fr] gap-6 mb-8">
 
         {/* LEFT: Order Summary */}
@@ -171,11 +176,6 @@ export function ConfirmationPage() {
             <ArrowRight size={14} />
           </button>
         </div>
-      </div>
-
-      {/* ─── TIMELINE ─── */}
-      <div className="mb-8" style={{ border: '1px solid #e0e0e0', borderRadius: '12px', padding: '24px' }}>
-        <SubscriptionTimeline hasSubscription={hasSubscription} />
       </div>
 
       {/* ─── INVITE ─── */}

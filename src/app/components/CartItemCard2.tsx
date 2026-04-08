@@ -122,7 +122,7 @@ export function CartItemCard2({
                           {/* Sweet Tea swatch */}
                           <div className="relative group/sweetTea">
                             <button
-                              className={`w-[30px] h-[30px] rounded-full cursor-pointer transition-all hover:scale-110 border-none ${
+                              className={`w-[16px] h-[16px] rounded-full cursor-pointer transition-all hover:scale-110 border-none ${
                                 item.selectedFlavor === get('card2.sweetTea')
                                   ? 'ring-2 ring-[#C8102E] ring-offset-2'
                                   : ''
@@ -138,7 +138,7 @@ export function CartItemCard2({
                           {/* Lemonade swatch */}
                           <div className="relative group/lemonade">
                             <button
-                              className={`w-[30px] h-[30px] rounded-full cursor-pointer transition-all hover:scale-110 border-none ${
+                              className={`w-[16px] h-[16px] rounded-full cursor-pointer transition-all hover:scale-110 border-none ${
                                 item.selectedFlavor === get('card2.lemonade')
                                   ? 'ring-2 ring-[#C8102E] ring-offset-2'
                                   : ''
@@ -154,7 +154,7 @@ export function CartItemCard2({
                           {/* Watermelon swatch */}
                           <div className="relative group/watermelon">
                             <button
-                              className={`w-[30px] h-[30px] rounded-full cursor-pointer transition-all hover:scale-110 border-none ${
+                              className={`w-[16px] h-[16px] rounded-full cursor-pointer transition-all hover:scale-110 border-none ${
                                 item.selectedFlavor === get('card2.watermelon')
                                   ? 'ring-2 ring-[#C8102E] ring-offset-2'
                                   : ''
@@ -184,7 +184,7 @@ export function CartItemCard2({
                           {/* Acai Berry swatch */}
                           <div className="relative group/acai">
                             <button
-                              className={`w-[30px] h-[30px] rounded-full cursor-pointer transition-all hover:scale-110 border-none ${
+                              className={`w-[16px] h-[16px] rounded-full cursor-pointer transition-all hover:scale-110 border-none ${
                                 item.selectedFlavor === get('card2.acaiBerry')
                                   ? 'ring-2 ring-[#C8102E] ring-offset-2'
                                   : ''

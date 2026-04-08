@@ -89,10 +89,12 @@ export function CartPage() {
           {/* Title Row */}
           <div className="flex items-center justify-between mb-5 flex-wrap gap-3">
             <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: '26px', fontWeight: 400 }}>
-              {cartOwnerPrefix} <ET k="cart.titleSuffix" />{' '}
-              <span className="text-[#555]" style={{ fontFamily: "'DM Sans', sans-serif", fontSize: '16px', fontWeight: 400, marginLeft: '8px' }}>
-                ({cart.getItemCount()} item{cart.getItemCount() !== 1 ? 's' : ''}: ${cart.getTotal().toFixed(2)})
-              </span>
+              {cartEmpty ? 'Your Cart is Empty' : (
+                <>{cartOwnerPrefix} <ET k="cart.titleSuffix" />{' '}
+                <span className="text-[#555]" style={{ fontFamily: "'DM Sans', sans-serif", fontSize: '16px', fontWeight: 400, marginLeft: '8px' }}>
+                  ({cart.getItemCount()} item{cart.getItemCount() !== 1 ? 's' : ''}: ${cart.getTotal().toFixed(2)})
+                </span></>
+              )}
             </div>
             {/* Desktop buttons */}
             <div className="hidden lg:flex gap-2.5">
@@ -200,6 +202,15 @@ export function CartPage() {
               <VIPBanner onAdd={addMembership} membershipPrice={membershipPrice} />
             )
           )}
+
+          {/* Special Offer banner — always shown */}
+          <SpecialOfferBanner onAdd={() => {
+            const slimProduct = SUGGESTED_PRODUCTS.find(p => p.id === 'slimTrim');
+            if (slimProduct) {
+              addSuggestedToCart(slimProduct);
+              toast.success('Slim & Trim Combo added to cart!');
+            }
+          }} />
 
           {/* Undo bars */}
           <AnimatePresence>
@@ -455,6 +466,33 @@ export function CartPage() {
           <span style={{ fontWeight: 800, fontSize: '16px' }}><ET k="cart.paypalLabel" /></span> <ET k="cart.paypalBuyNow" />
         </button>
       </div>
+    </div>
+  );
+}
+
+/* SPECIAL OFFER BANNER */
+function SpecialOfferBanner({ onAdd }: { onAdd: () => void }) {
+  return (
+    <div className="bg-white border border-[#e0e0e0] rounded-xl p-3.5 flex items-center justify-between mb-4 gap-3 flex-wrap">
+      <div className="flex items-center gap-2.5">
+        <div className="w-8 h-8 rounded-full bg-[#C8102E] flex items-center justify-center flex-shrink-0">
+          <span style={{ color: '#fff', fontSize: '16px' }}>🏷</span>
+        </div>
+        <div>
+          <h3 style={{ fontSize: '15px', fontWeight: 700, color: '#1a1a1a' }}>Special Offer!</h3>
+          <p style={{ fontSize: '13px', color: '#555', marginTop: '2px' }}>
+            Optimize your goals with a limited time offer of 50% off your first delivery of{' '}
+            <a className="text-[#C8102E] cursor-pointer underline hover:text-[#a00d24]">Slim and Trim</a>!
+          </p>
+        </div>
+      </div>
+      <button
+        className="bg-white text-[#1a1a1a] px-5 py-2.5 rounded-full cursor-pointer whitespace-nowrap transition-all hover:bg-[#f5f5f5]"
+        style={{ fontSize: '14px', fontWeight: 600, border: '1px solid #d0d0d0' }}
+        onClick={onAdd}
+      >
+        Add to Cart
+      </button>
     </div>
   );
 }

@@ -202,81 +202,43 @@ export function OrderSummary({
 
       {/* Promo code */}
       {showPromo && (
-        <div className="mt-3">
+        <div className="mt-4 pt-3 border-t border-[#e0e0e0]">
           {promoApplied ? (
-            /* Confirmed state */
             <div className="flex items-center gap-2">
               <div className="flex items-center gap-1.5 text-[#2e7d32]" style={{ fontSize: '13px', fontWeight: 600 }}>
-                <span>✓</span>
-                <span>Promo Confirmed</span>
+                <span>✓</span><span>Promo Confirmed: {promoCode}</span>
               </div>
-              <span className="text-[#555]" style={{ fontSize: '12px' }}>"{promoCode}" added</span>
-              <button
-                className="bg-transparent border-none cursor-pointer p-0.5 text-[#888] hover:text-[#C8102E] transition-colors"
-                onClick={() => {
-                  setPromoApplied(false);
-                  setPromoInput(promoCode);
-                  setPromoOpen(true);
-                }}
-              >
+              <button className="bg-transparent border-none cursor-pointer p-0.5 text-[#888] hover:text-[#C8102E] transition-colors" onClick={() => { setPromoApplied(false); setPromoInput(promoCode); }}>
                 <Edit size={14} />
               </button>
             </div>
-          ) : promoOpen ? (
-            /* Input state */
+          ) : (
             <div>
-              <div className="flex gap-2 mt-0">
+              <label style={{ fontSize: '12px', color: '#009cde', fontWeight: 500, display: 'block', marginBottom: '6px' }}>
+                Add promo code
+              </label>
+              <div className="flex items-center gap-2">
                 <input
                   type="text"
-                  placeholder={get('orderSummary.promoPlaceholder')}
+                  placeholder="Enter Promo Code"
                   value={promoInput}
                   onChange={e => { setPromoInput(e.target.value); if (promoError) setPromoError(false); }}
-                  className={`flex-1 px-3 py-2 border rounded-md focus:outline-none ${promoError ? 'border-[#d32f2f] bg-[#fff5f5]' : 'border-[#e0e0e0] focus:border-[#C8102E]'}`}
+                  className={`flex-1 px-3.5 py-2.5 border rounded-full focus:outline-none ${promoError ? 'border-[#d32f2f] bg-[#fff5f5]' : 'border-[#d0d0d0] focus:border-[#C8102E]'}`}
                   style={{ fontSize: '13px', fontFamily: "'DM Sans', sans-serif" }}
                 />
-              </div>
-              {promoError && (
-                <div className="text-[#d32f2f] mt-1" style={{ fontSize: '12px', fontWeight: 500 }}>Required</div>
-              )}
-              <div className="flex gap-2 mt-2">
                 <button
-                  className="bg-[#C8102E] text-white px-3.5 py-2 rounded-md border-none cursor-pointer"
-                  style={{ fontSize: '13px', fontWeight: 600 }}
+                  className="bg-transparent border-none cursor-pointer text-[#1a1a1a] hover:text-[#C8102E] transition-colors flex-shrink-0"
+                  style={{ fontSize: '13px', fontWeight: 700, fontFamily: "'DM Sans', sans-serif" }}
                   onClick={() => {
-                    if (promoInput.trim()) {
-                      setPromoCode(promoInput.trim());
-                      setPromoApplied(true);
-                      setPromoOpen(false);
-                      setPromoError(false);
-                    } else {
-                      setPromoError(true);
-                    }
+                    if (promoInput.trim()) { setPromoCode(promoInput.trim()); setPromoApplied(true); setPromoError(false); }
+                    else setPromoError(true);
                   }}
                 >
                   Apply
                 </button>
-                <button
-                  className="bg-transparent text-[#888] px-3.5 py-2 rounded-md border border-[#e0e0e0] cursor-pointer hover:bg-[#f5f5f5] transition-colors"
-                  style={{ fontSize: '13px', fontWeight: 600 }}
-                  onClick={() => {
-                    setPromoOpen(false);
-                    setPromoInput('');
-                    setPromoError(false);
-                  }}
-                >
-                  Cancel
-                </button>
               </div>
+              {promoError && <div className="text-[#d32f2f] mt-1" style={{ fontSize: '12px' }}>Required</div>}
             </div>
-          ) : (
-            /* Toggle state */
-            <button
-              className="flex items-center gap-1 text-[#C8102E] bg-transparent border-none cursor-pointer p-0"
-              style={{ fontSize: '13px', fontWeight: 600, fontFamily: "'DM Sans', sans-serif" }}
-              onClick={() => setPromoOpen(true)}
-            >
-              <span style={{ fontSize: '15px' }}>+</span> <ET k="orderSummary.promoLabel" />
-            </button>
           )}
         </div>
       )}
@@ -295,16 +257,35 @@ export function OrderSummary({
       {/* PayPal section */}
       {showPaypal && (
         <div className="mt-3 pt-3 border-t border-[#e0e0e0]">
+          {/* PayPal Checkout button */}
           <button
-            className="w-full bg-[#009cde] text-white py-3 rounded-full border-none cursor-pointer flex items-center justify-center gap-2 transition-colors hover:bg-[#007ab8] hidden lg:flex mb-2"
-            style={{ fontSize: '15px', fontWeight: 700 }}
+            className="w-full py-3 rounded-full border-none cursor-pointer flex items-center justify-center gap-2 transition-colors hover:opacity-90 hidden lg:flex mb-3"
+            style={{ background: '#009cde', fontSize: '15px', fontWeight: 700, color: '#fff' }}
           >
-            <span style={{ fontWeight: 800, fontSize: '16px' }}><ET k="orderSummary.paypalLabel" /></span> <ET k="orderSummary.paypalBuyNow" />
+            {/* Real PayPal logo SVG */}
+            <svg width="80" height="20" viewBox="0 0 124 33" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M46.2 7.4h-6.6c-.5 0-.9.3-1 .8L36 24.8c-.1.4.2.7.6.7h3.2c.5 0 .9-.3 1-.8l.7-4.4c.1-.5.5-.8 1-.8h2.1c4.3 0 6.8-2.1 7.5-6.2.3-1.8 0-3.2-.8-4.2-.9-1.1-2.5-1.7-4.1-1.7zm.8 6.1c-.4 2.4-2.2 2.4-3.9 2.4h-1l.7-4.4c0-.3.3-.5.6-.5h.5c1.2 0 2.3 0 2.9.7.4.4.5 1 .2 1.8z" fill="white"/>
+              <path d="M66.5 13.4h-3.2c-.3 0-.6.2-.6.5l-.2.9-.2-.3c-.7-1-2.3-1.4-3.8-1.4-3.6 0-6.7 2.7-7.3 6.5-.3 1.9.1 3.7 1.2 5 1 1.2 2.4 1.7 4.1 1.7 2.9 0 4.5-1.9 4.5-1.9l-.2.9c-.1.4.2.7.6.7h2.9c.5 0 .9-.3 1-.8l1.7-10.7c.1-.5-.2-.8-.5-.1zm-4.4 6.3c-.3 1.8-1.7 3-3.5 3-1 0-1.7-.3-2.2-.9-.5-.6-.7-1.4-.5-2.3.3-1.8 1.7-3 3.5-3 .9 0 1.7.3 2.2.9.5.7.6 1.5.5 2.3z" fill="white"/>
+              <path d="M84.6 13.4h-3.2c-.4 0-.7.2-.9.5l-5.1 7.5-2.2-7.2c-.1-.5-.6-.8-1-.8H69c-.4 0-.7.4-.6.8l4.1 12-3.9 5.5c-.3.4 0 .9.5.9h3.2c.4 0 .7-.2.9-.5l12.4-17.9c.3-.4 0-.8-.5-.8z" fill="white"/>
+              <path d="M95.7 7.4h-6.6c-.5 0-.9.3-1 .8l-2.6 16.6c-.1.4.2.7.6.7h3.4c.3 0 .6-.2.7-.5l.7-4.7c.1-.5.5-.8 1-.8h2.1c4.3 0 6.8-2.1 7.5-6.2.3-1.8 0-3.2-.8-4.2-.9-1.1-2.4-1.7-4-1.7zm.8 6.1c-.4 2.4-2.2 2.4-3.9 2.4h-1l.7-4.4c0-.3.3-.5.6-.5h.5c1.2 0 2.3 0 2.9.7.3.4.4 1 .2 1.8z" fill="white"/>
+              <path d="M115.9 13.4h-3.2c-.3 0-.6.2-.6.5l-.2.9-.2-.3c-.7-1-2.3-1.4-3.8-1.4-3.6 0-6.7 2.7-7.3 6.5-.3 1.9.1 3.7 1.2 5 1 1.2 2.4 1.7 4.1 1.7 2.9 0 4.5-1.9 4.5-1.9l-.2.9c-.1.4.2.7.6.7h2.9c.5 0 .9-.3 1-.8l1.7-10.7c.1-.5-.2-.8-.5-.1zm-4.5 6.3c-.3 1.8-1.7 3-3.5 3-1 0-1.7-.3-2.2-.9-.5-.6-.7-1.4-.5-2.3.3-1.8 1.7-3 3.5-3 .9 0 1.7.3 2.2.9.5.7.6 1.5.5 2.3z" fill="white"/>
+              <path d="M120.3 7.8l-2.6 16.9c-.1.4.2.7.6.7h2.8c.5 0 .9-.3 1-.8l2.6-16.6c.1-.4-.2-.7-.6-.7h-3.2c-.3 0-.5.2-.6.5z" fill="white"/>
+            </svg>
+            <span style={{ fontWeight: 800 }}>Checkout</span>
           </button>
-          <div className="flex items-center gap-1" style={{ fontSize: '12px', color: '#555' }}>
-            <strong style={{ color: '#003087' }}>{get('orderSummary.paypalLabel')}</strong> {get('orderSummary.paypalPay4')} $
-            {(total / 4).toFixed(2)}.{' '}
-            <a className="text-[#009cde] cursor-pointer"><ET k="orderSummary.paypalLearnMore" /></a>
+          {/* PayPal installments line */}
+          <div className="flex items-center gap-2" style={{ fontSize: '12px', color: '#555' }}>
+            {/* PayPal wordmark */}
+            <svg width="44" height="12" viewBox="0 0 124 33" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M46.2 7.4h-6.6c-.5 0-.9.3-1 .8L36 24.8c-.1.4.2.7.6.7h3.2c.5 0 .9-.3 1-.8l.7-4.4c.1-.5.5-.8 1-.8h2.1c4.3 0 6.8-2.1 7.5-6.2.3-1.8 0-3.2-.8-4.2-.9-1.1-2.5-1.7-4.1-1.7zm.8 6.1c-.4 2.4-2.2 2.4-3.9 2.4h-1l.7-4.4c0-.3.3-.5.6-.5h.5c1.2 0 2.3 0 2.9.7.4.4.5 1 .2 1.8z" fill="#003087"/>
+              <path d="M66.5 13.4h-3.2c-.3 0-.6.2-.6.5l-.2.9-.2-.3c-.7-1-2.3-1.4-3.8-1.4-3.6 0-6.7 2.7-7.3 6.5-.3 1.9.1 3.7 1.2 5 1 1.2 2.4 1.7 4.1 1.7 2.9 0 4.5-1.9 4.5-1.9l-.2.9c-.1.4.2.7.6.7h2.9c.5 0 .9-.3 1-.8l1.7-10.7c.1-.5-.2-.8-.5-.1zm-4.4 6.3c-.3 1.8-1.7 3-3.5 3-1 0-1.7-.3-2.2-.9-.5-.6-.7-1.4-.5-2.3.3-1.8 1.7-3 3.5-3 .9 0 1.7.3 2.2.9.5.7.6 1.5.5 2.3z" fill="#003087"/>
+              <path d="M84.6 13.4h-3.2c-.4 0-.7.2-.9.5l-5.1 7.5-2.2-7.2c-.1-.5-.6-.8-1-.8H69c-.4 0-.7.4-.6.8l4.1 12-3.9 5.5c-.3.4 0 .9.5.9h3.2c.4 0 .7-.2.9-.5l12.4-17.9c.3-.4 0-.8-.5-.8z" fill="#003087"/>
+              <path d="M95.7 7.4h-6.6c-.5 0-.9.3-1 .8l-2.6 16.6c-.1.4.2.7.6.7h3.4c.3 0 .6-.2.7-.5l.7-4.7c.1-.5.5-.8 1-.8h2.1c4.3 0 6.8-2.1 7.5-6.2.3-1.8 0-3.2-.8-4.2-.9-1.1-2.4-1.7-4-1.7zm.8 6.1c-.4 2.4-2.2 2.4-3.9 2.4h-1l.7-4.4c0-.3.3-.5.6-.5h.5c1.2 0 2.3 0 2.9.7.3.4.4 1 .2 1.8z" fill="#009cde"/>
+              <path d="M115.9 13.4h-3.2c-.3 0-.6.2-.6.5l-.2.9-.2-.3c-.7-1-2.3-1.4-3.8-1.4-3.6 0-6.7 2.7-7.3 6.5-.3 1.9.1 3.7 1.2 5 1 1.2 2.4 1.7 4.1 1.7 2.9 0 4.5-1.9 4.5-1.9l-.2.9c-.1.4.2.7.6.7h2.9c.5 0 .9-.3 1-.8l1.7-10.7c.1-.5-.2-.8-.5-.1zm-4.5 6.3c-.3 1.8-1.7 3-3.5 3-1 0-1.7-.3-2.2-.9-.5-.6-.7-1.4-.5-2.3.3-1.8 1.7-3 3.5-3 .9 0 1.7.3 2.2.9.5.7.6 1.5.5 2.3z" fill="#009cde"/>
+              <path d="M120.3 7.8l-2.6 16.9c-.1.4.2.7.6.7h2.8c.5 0 .9-.3 1-.8l2.6-16.6c.1-.4-.2-.7-.6-.7h-3.2c-.3 0-.5.2-.6.5z" fill="#009cde"/>
+            </svg>
+            <span>Pay in 4 interest-free payments of ${(total / 4).toFixed(2)}.</span>
+            <a className="text-[#009cde] cursor-pointer hover:underline" style={{ fontWeight: 600 }}>Learn more</a>
           </div>
         </div>
       )}
