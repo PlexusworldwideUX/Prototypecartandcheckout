@@ -135,7 +135,7 @@ export function AuthHub({ initialView, onSuccess }: { initialView: AuthView; onS
   // ── Sign In Hub ─────────────────────────────────────────────────────────────
   if (view === 'signIn') return (
     <div className="flex flex-col items-center w-full">
-      <h1 style={{ fontSize: '32px', fontWeight: 700, fontFamily: 'serif', color: '#1a1a1a', textAlign: 'center', marginBottom: '32px' }}>
+      <h1 style={{ fontSize: '32px', fontWeight: 700, fontFamily: "'DM Sans', sans-serif", color: '#1a1a1a', textAlign: 'center', marginBottom: '32px' }}>
         Sign In
       </h1>
       <div className="flex flex-col items-center gap-3 w-full" style={{ maxWidth: '340px' }}>
@@ -161,7 +161,7 @@ export function AuthHub({ initialView, onSuccess }: { initialView: AuthView; onS
   // ── Join Hub ────────────────────────────────────────────────────────────────
   if (view === 'join') return (
     <div className="flex flex-col items-center w-full">
-      <h1 style={{ fontSize: '32px', fontWeight: 700, fontFamily: 'serif', color: '#1a1a1a', textAlign: 'center', marginBottom: '32px' }}>
+      <h1 style={{ fontSize: '32px', fontWeight: 700, fontFamily: "'DM Sans', sans-serif", color: '#1a1a1a', textAlign: 'center', marginBottom: '32px' }}>
         Join
       </h1>
       <div className="flex flex-col items-center gap-3 w-full" style={{ maxWidth: '340px' }}>

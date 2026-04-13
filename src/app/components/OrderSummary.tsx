@@ -216,16 +216,15 @@ export function OrderSummary({
         <>
           <hr className="border-t border-[#e0e0e0] mt-4 mb-3 hidden lg:block" />
           <div className="text-center hidden lg:block">
-            {/* PayPal wordmark + Checkout text */}
-            <div className="flex items-center justify-center gap-1.5 mb-1.5">
-              {/* "Pay" in dark blue, "Pal" in light blue — bold italic to match PayPal brand */}
-              <span style={{ fontSize: '18px', fontWeight: 800, fontStyle: 'italic', color: '#003087', fontFamily: 'serif' }}>Pay</span>
-              <span style={{ fontSize: '18px', fontWeight: 800, fontStyle: 'italic', color: '#009cde', fontFamily: 'serif' }}>Pal</span>
-              <span style={{ fontSize: '16px', fontWeight: 400, color: '#1a1a1a', marginLeft: '2px' }}>Checkout</span>
+            {/* PayPal as one word, two-tone, sans-serif */}
+            <div className="flex items-center justify-center gap-1 mb-1.5">
+              <span style={{ fontSize: '18px', fontWeight: 800, fontStyle: 'italic', color: '#003087', fontFamily: "'DM Sans', sans-serif" }}>Pay</span><span style={{ fontSize: '18px', fontWeight: 800, fontStyle: 'italic', color: '#009cde', fontFamily: "'DM Sans', sans-serif" }}>Pal</span>
+              <span style={{ fontSize: '16px', fontWeight: 400, color: '#1a1a1a', marginLeft: '4px', fontFamily: "'DM Sans', sans-serif" }}>Checkout</span>
             </div>
-            <div className="flex items-center justify-center gap-2" style={{ fontSize: '13px', color: '#333' }}>
-              <span>Pay in 4 interest-free payments of ${(total / 4).toFixed(2)}.</span>
-              <a className="cursor-pointer hover:underline" style={{ color: '#009cde', fontWeight: 600 }}>Learn more</a>
+            {/* Force inline — no wrapping */}
+            <div className="flex items-center justify-center gap-2 flex-nowrap" style={{ whiteSpace: 'nowrap', fontSize: '13px', color: '#333' }}>
+              <span style={{ whiteSpace: 'nowrap' }}>Pay in 4 interest-free payments of ${(total / 4).toFixed(2)}.</span>
+              <a className="cursor-pointer hover:underline flex-shrink-0" style={{ color: '#009cde', fontWeight: 600, whiteSpace: 'nowrap' }}>Learn more</a>
             </div>
           </div>
           <hr className="border-t border-[#e0e0e0] mt-3 mb-0 hidden lg:block" />

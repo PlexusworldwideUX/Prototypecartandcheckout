@@ -194,6 +194,15 @@ export function CartPage() {
             <ProgressRewards />
           </div>
 
+          {/* Special Offer banner — always shown, above membership */}
+          <SpecialOfferBanner onAdd={() => {
+            const slimProduct = SUGGESTED_PRODUCTS.find(p => p.id === 'slimTrim');
+            if (slimProduct) {
+              addSuggestedToCart(slimProduct);
+              toast.success('Slim & Trim Combo added to cart!');
+            }
+          }} />
+
           {/* VIP Banner / Membership */}
           {!isSignedInMember && (
             hasMembership ? (
@@ -202,15 +211,6 @@ export function CartPage() {
               <VIPBanner onAdd={addMembership} membershipPrice={membershipPrice} />
             )
           )}
-
-          {/* Special Offer banner — always shown */}
-          <SpecialOfferBanner onAdd={() => {
-            const slimProduct = SUGGESTED_PRODUCTS.find(p => p.id === 'slimTrim');
-            if (slimProduct) {
-              addSuggestedToCart(slimProduct);
-              toast.success('Slim & Trim Combo added to cart!');
-            }
-          }} />
 
           {/* Undo bars */}
           <AnimatePresence>
@@ -474,7 +474,7 @@ export function CartPage() {
 function SpecialOfferBanner({ onAdd }: { onAdd: () => void }) {
   return (
     <div
-      className="rounded-xl p-3.5 flex items-center justify-between mb-4 gap-3 flex-wrap"
+      className="rounded-xl p-3.5 flex items-center justify-between mb-4 gap-3 flex-wrap mt-3"
       style={{ border: '1.5px solid #009cde', background: '#fff' }}
     >
       <div className="flex items-center gap-2.5">
