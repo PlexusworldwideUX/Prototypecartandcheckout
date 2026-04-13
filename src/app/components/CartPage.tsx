@@ -472,6 +472,8 @@ export function CartPage() {
 
 /* SPECIAL OFFER BANNER */
 function SpecialOfferBanner({ onAdd }: { onAdd: () => void }) {
+  const [dismissed, setDismissed] = React.useState(false);
+  if (dismissed) return null;
   return (
     <div
       className="rounded-xl p-3.5 flex items-center justify-between mb-4 gap-3 flex-wrap mt-3"
@@ -499,7 +501,7 @@ function SpecialOfferBanner({ onAdd }: { onAdd: () => void }) {
           borderRadius: '999px', padding: '8px 20px',
           fontFamily: "'DM Sans', sans-serif",
         }}
-        onClick={onAdd}
+        onClick={() => { onAdd(); setDismissed(true); }}
       >
         Add to Cart
       </button>
