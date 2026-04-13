@@ -460,7 +460,7 @@ export function CheckoutPage() {
       <h1 style={{ fontSize: '28px', fontWeight: 700, margin: '0 0 24px 0' }}>Checkout</h1>
 
       {/* Mobile sticky progress meter */}
-      <div className="lg:hidden sticky top-[88px] z-40 bg-white py-3 -mx-6 px-6" style={{ boxShadow: '0 2px 4px rgba(0,0,0,0.06)' }}>
+      <div className="lg:hidden sticky top-[104px] z-40 bg-white py-3 -mx-6 px-6" style={{ boxShadow: '0 2px 4px rgba(0,0,0,0.06)' }}>
         <ProgressMeter showEnrollment={showEnrollment} enrollmentSaved={enrollmentSaved} shippingSaved={shippingSaved} paymentSaved={paymentSaved} activeSection={activeSection} />
       </div>
 
@@ -1133,7 +1133,7 @@ export function CheckoutPage() {
         </div>
 
         {/* Order Summary sidebar */}
-        <div className="lg:sticky lg:top-[88px]">
+        <div className="lg:sticky lg:top-[104px]">
           {/* Desktop progress meter — above order summary */}
           <div className="hidden lg:block mb-6">
             <ProgressMeter showEnrollment={showEnrollment} enrollmentSaved={enrollmentSaved} shippingSaved={shippingSaved} paymentSaved={paymentSaved} activeSection={activeSection} />

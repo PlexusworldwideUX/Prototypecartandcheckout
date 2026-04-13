@@ -20,7 +20,7 @@ function AppContent() {
       <Toaster
         position="top-center"
         richColors
-        offset={96}
+        offset={104}
         duration={3000}
         visibleToasts={1}
         toastOptions={{

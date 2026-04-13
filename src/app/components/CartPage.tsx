@@ -146,7 +146,7 @@ export function CartPage() {
           </div>
 
           {/* Mobile Sticky Top */}
-          <div className="lg:hidden sticky top-[100px] z-40 bg-white border-b border-[#e0e0e0] -mx-6 px-6 pb-1">
+          <div className="lg:hidden sticky top-[100px] z-40 bg-white border-b border-[#e0e0e0] -mx-6 px-6 pb-2 pt-1">
             {isSignedInMember && (
             <div className="flex gap-2.5 flex-wrap py-3">
               <div className="relative group/sharemobile">
@@ -396,7 +396,7 @@ export function CartPage() {
         </div>
 
         {/* RIGHT: Order Summary */}
-        <div className="lg:sticky lg:top-[88px]">
+        <div className="lg:sticky lg:top-[104px]">
           <OrderSummary
             showProgress
             showCheckoutBtn
