@@ -218,7 +218,7 @@ export function OrderSummary({
           <div className="text-center hidden lg:block">
             {/* PayPal as one word, two-tone, sans-serif */}
             <div className="flex items-center justify-center gap-1 mb-1.5">
-              <span style={{ fontSize: '18px', fontWeight: 800, fontStyle: 'italic', color: '#003087', fontFamily: "'DM Sans', sans-serif" }}>PayPal</span>
+              <span style={{ fontSize: '18px', fontWeight: 800, fontStyle: 'italic', color: '#003087', fontFamily: "'DM Sans', sans-serif" }}>Pay</span><span style={{ fontSize: '18px', fontWeight: 800, fontStyle: 'italic', color: '#009cde', fontFamily: "'DM Sans', sans-serif" }}>Pal</span>
               <span style={{ fontSize: '16px', fontWeight: 400, color: '#1a1a1a', marginLeft: '4px', fontFamily: "'DM Sans', sans-serif" }}>Checkout</span>
             </div>
             {/* Force inline — no wrapping */}
