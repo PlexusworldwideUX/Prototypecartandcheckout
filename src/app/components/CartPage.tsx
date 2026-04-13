@@ -473,22 +473,32 @@ export function CartPage() {
 /* SPECIAL OFFER BANNER */
 function SpecialOfferBanner({ onAdd }: { onAdd: () => void }) {
   return (
-    <div className="bg-white border border-[#e0e0e0] rounded-xl p-3.5 flex items-center justify-between mb-4 gap-3 flex-wrap">
+    <div
+      className="rounded-xl p-3.5 flex items-center justify-between mb-4 gap-3 flex-wrap"
+      style={{ border: '1.5px solid #009cde', background: '#fff' }}
+    >
       <div className="flex items-center gap-2.5">
-        <div className="w-8 h-8 rounded-full bg-[#C8102E] flex items-center justify-center flex-shrink-0">
-          <span style={{ color: '#fff', fontSize: '16px' }}>🏷</span>
-        </div>
+        {/* Blue tag icon */}
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#009cde" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
+          <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/>
+          <line x1="7" y1="7" x2="7.01" y2="7"/>
+        </svg>
         <div>
-          <h3 style={{ fontSize: '15px', fontWeight: 700, color: '#1a1a1a' }}>Special Offer!</h3>
-          <p style={{ fontSize: '13px', color: '#555', marginTop: '2px' }}>
+          <h3 style={{ fontSize: '15px', fontWeight: 700, color: '#009cde', marginBottom: '2px' }}>Special Offer!</h3>
+          <p style={{ fontSize: '13px', color: '#555', margin: 0 }}>
             Optimize your goals with a limited time offer of 50% off your first delivery of{' '}
-            <a className="text-[#C8102E] cursor-pointer underline hover:text-[#a00d24]">Slim and Trim</a>!
+            <a className="cursor-pointer hover:text-[#007ab8] transition-colors" style={{ color: '#009cde', textDecoration: 'underline' }}>Slim and Trim</a>!
           </p>
         </div>
       </div>
       <button
-        className="bg-white text-[#1a1a1a] px-5 py-2.5 rounded-full cursor-pointer whitespace-nowrap transition-all hover:bg-[#f5f5f5]"
-        style={{ fontSize: '14px', fontWeight: 600, border: '1px solid #d0d0d0' }}
+        className="cursor-pointer whitespace-nowrap transition-all hover:bg-[#f0f9fe]"
+        style={{
+          fontSize: '14px', fontWeight: 600, color: '#1a1a1a',
+          background: '#fff', border: '1.5px solid #d0d0d0',
+          borderRadius: '999px', padding: '8px 20px',
+          fontFamily: "'DM Sans', sans-serif",
+        }}
         onClick={onAdd}
       >
         Add to Cart

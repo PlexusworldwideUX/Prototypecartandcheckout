@@ -200,9 +200,41 @@ export function OrderSummary({
         </button>
       )}
 
-      {/* Promo code */}
+      {/* Checkout button */}
+      {showCheckoutBtn && (
+        <button
+          className="w-full bg-[#C8102E] text-white py-3.5 px-7 rounded-full border-none cursor-pointer mt-4 transition-all hover:bg-[#a00d24] hidden lg:block"
+          style={{ fontSize: '15px', fontWeight: 700, letterSpacing: '1px', fontFamily: "'DM Sans', sans-serif" }}
+          onClick={onCheckout}
+        >
+          CHECKOUT
+        </button>
+      )}
+
+      {/* PayPal section — centered text, no button */}
+      {showPaypal && (
+        <>
+          <hr className="border-t border-[#e0e0e0] mt-4 mb-3 hidden lg:block" />
+          <div className="text-center hidden lg:block">
+            {/* PayPal wordmark + Checkout text */}
+            <div className="flex items-center justify-center gap-1.5 mb-1.5">
+              {/* "Pay" in dark blue, "Pal" in light blue — bold italic to match PayPal brand */}
+              <span style={{ fontSize: '18px', fontWeight: 800, fontStyle: 'italic', color: '#003087', fontFamily: 'serif' }}>Pay</span>
+              <span style={{ fontSize: '18px', fontWeight: 800, fontStyle: 'italic', color: '#009cde', fontFamily: 'serif' }}>Pal</span>
+              <span style={{ fontSize: '16px', fontWeight: 400, color: '#1a1a1a', marginLeft: '2px' }}>Checkout</span>
+            </div>
+            <div className="flex items-center justify-center gap-2" style={{ fontSize: '13px', color: '#333' }}>
+              <span>Pay in 4 interest-free payments of ${(total / 4).toFixed(2)}.</span>
+              <a className="cursor-pointer hover:underline" style={{ color: '#009cde', fontWeight: 600 }}>Learn more</a>
+            </div>
+          </div>
+          <hr className="border-t border-[#e0e0e0] mt-3 mb-0 hidden lg:block" />
+        </>
+      )}
+
+      {/* Promo code — below PayPal */}
       {showPromo && (
-        <div className="mt-4 pt-3 border-t border-[#e0e0e0]">
+        <div className="mt-3">
           {promoApplied ? (
             <div className="flex items-center gap-2">
               <div className="flex items-center gap-1.5 text-[#2e7d32]" style={{ fontSize: '13px', fontWeight: 600 }}>
@@ -214,7 +246,7 @@ export function OrderSummary({
             </div>
           ) : (
             <div>
-              <label style={{ fontSize: '12px', color: '#009cde', fontWeight: 500, display: 'block', marginBottom: '6px' }}>
+              <label style={{ fontSize: '13px', color: '#009cde', fontWeight: 500, display: 'block', marginBottom: '6px' }}>
                 Add promo code
               </label>
               <div className="flex items-center gap-2">
@@ -223,12 +255,12 @@ export function OrderSummary({
                   placeholder="Enter Promo Code"
                   value={promoInput}
                   onChange={e => { setPromoInput(e.target.value); if (promoError) setPromoError(false); }}
-                  className={`flex-1 px-3.5 py-2.5 border rounded-full focus:outline-none ${promoError ? 'border-[#d32f2f] bg-[#fff5f5]' : 'border-[#d0d0d0] focus:border-[#C8102E]'}`}
-                  style={{ fontSize: '13px', fontFamily: "'DM Sans', sans-serif" }}
+                  className={`flex-1 px-4 py-2.5 rounded-full focus:outline-none ${promoError ? 'border border-[#d32f2f] bg-[#fff5f5]' : 'border border-[#d0d0d0] focus:border-[#C8102E]'}`}
+                  style={{ fontSize: '14px', fontFamily: "'DM Sans', sans-serif", color: '#999' }}
                 />
                 <button
-                  className="bg-transparent border-none cursor-pointer text-[#1a1a1a] hover:text-[#C8102E] transition-colors flex-shrink-0"
-                  style={{ fontSize: '13px', fontWeight: 700, fontFamily: "'DM Sans', sans-serif" }}
+                  className="bg-transparent border-none cursor-pointer flex-shrink-0"
+                  style={{ fontSize: '14px', fontWeight: 700, color: '#1a1a1a', fontFamily: "'DM Sans', sans-serif", textDecoration: 'underline', textUnderlineOffset: '3px' }}
                   onClick={() => {
                     if (promoInput.trim()) { setPromoCode(promoInput.trim()); setPromoApplied(true); setPromoError(false); }
                     else setPromoError(true);
@@ -242,54 +274,6 @@ export function OrderSummary({
           )}
         </div>
       )}
-
-      {/* Checkout button */}
-      {showCheckoutBtn && (
-        <button
-          className="w-full bg-[#C8102E] text-white py-3.5 px-7 rounded-full border-none cursor-pointer mt-4 transition-all hover:bg-[#a00d24] hidden lg:block"
-          style={{ fontSize: '16px', fontWeight: 600, letterSpacing: '0.3px' }}
-          onClick={onCheckout}
-        >
-          <ET k="orderSummary.checkoutBtn" />
-        </button>
-      )}
-
-      {/* PayPal section */}
-      {showPaypal && (
-        <div className="mt-3 pt-3 border-t border-[#e0e0e0]">
-          {/* PayPal Checkout button */}
-          <button
-            className="w-full py-3 rounded-full border-none cursor-pointer flex items-center justify-center gap-2 transition-colors hover:opacity-90 hidden lg:flex mb-3"
-            style={{ background: '#009cde', fontSize: '15px', fontWeight: 700, color: '#fff' }}
-          >
-            {/* Real PayPal logo SVG */}
-            <svg width="80" height="20" viewBox="0 0 124 33" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M46.2 7.4h-6.6c-.5 0-.9.3-1 .8L36 24.8c-.1.4.2.7.6.7h3.2c.5 0 .9-.3 1-.8l.7-4.4c.1-.5.5-.8 1-.8h2.1c4.3 0 6.8-2.1 7.5-6.2.3-1.8 0-3.2-.8-4.2-.9-1.1-2.5-1.7-4.1-1.7zm.8 6.1c-.4 2.4-2.2 2.4-3.9 2.4h-1l.7-4.4c0-.3.3-.5.6-.5h.5c1.2 0 2.3 0 2.9.7.4.4.5 1 .2 1.8z" fill="white"/>
-              <path d="M66.5 13.4h-3.2c-.3 0-.6.2-.6.5l-.2.9-.2-.3c-.7-1-2.3-1.4-3.8-1.4-3.6 0-6.7 2.7-7.3 6.5-.3 1.9.1 3.7 1.2 5 1 1.2 2.4 1.7 4.1 1.7 2.9 0 4.5-1.9 4.5-1.9l-.2.9c-.1.4.2.7.6.7h2.9c.5 0 .9-.3 1-.8l1.7-10.7c.1-.5-.2-.8-.5-.1zm-4.4 6.3c-.3 1.8-1.7 3-3.5 3-1 0-1.7-.3-2.2-.9-.5-.6-.7-1.4-.5-2.3.3-1.8 1.7-3 3.5-3 .9 0 1.7.3 2.2.9.5.7.6 1.5.5 2.3z" fill="white"/>
-              <path d="M84.6 13.4h-3.2c-.4 0-.7.2-.9.5l-5.1 7.5-2.2-7.2c-.1-.5-.6-.8-1-.8H69c-.4 0-.7.4-.6.8l4.1 12-3.9 5.5c-.3.4 0 .9.5.9h3.2c.4 0 .7-.2.9-.5l12.4-17.9c.3-.4 0-.8-.5-.8z" fill="white"/>
-              <path d="M95.7 7.4h-6.6c-.5 0-.9.3-1 .8l-2.6 16.6c-.1.4.2.7.6.7h3.4c.3 0 .6-.2.7-.5l.7-4.7c.1-.5.5-.8 1-.8h2.1c4.3 0 6.8-2.1 7.5-6.2.3-1.8 0-3.2-.8-4.2-.9-1.1-2.4-1.7-4-1.7zm.8 6.1c-.4 2.4-2.2 2.4-3.9 2.4h-1l.7-4.4c0-.3.3-.5.6-.5h.5c1.2 0 2.3 0 2.9.7.3.4.4 1 .2 1.8z" fill="white"/>
-              <path d="M115.9 13.4h-3.2c-.3 0-.6.2-.6.5l-.2.9-.2-.3c-.7-1-2.3-1.4-3.8-1.4-3.6 0-6.7 2.7-7.3 6.5-.3 1.9.1 3.7 1.2 5 1 1.2 2.4 1.7 4.1 1.7 2.9 0 4.5-1.9 4.5-1.9l-.2.9c-.1.4.2.7.6.7h2.9c.5 0 .9-.3 1-.8l1.7-10.7c.1-.5-.2-.8-.5-.1zm-4.5 6.3c-.3 1.8-1.7 3-3.5 3-1 0-1.7-.3-2.2-.9-.5-.6-.7-1.4-.5-2.3.3-1.8 1.7-3 3.5-3 .9 0 1.7.3 2.2.9.5.7.6 1.5.5 2.3z" fill="white"/>
-              <path d="M120.3 7.8l-2.6 16.9c-.1.4.2.7.6.7h2.8c.5 0 .9-.3 1-.8l2.6-16.6c.1-.4-.2-.7-.6-.7h-3.2c-.3 0-.5.2-.6.5z" fill="white"/>
-            </svg>
-            <span style={{ fontWeight: 800 }}>Checkout</span>
-          </button>
-          {/* PayPal installments line */}
-          <div className="flex items-center gap-2" style={{ fontSize: '12px', color: '#555' }}>
-            {/* PayPal wordmark */}
-            <svg width="44" height="12" viewBox="0 0 124 33" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M46.2 7.4h-6.6c-.5 0-.9.3-1 .8L36 24.8c-.1.4.2.7.6.7h3.2c.5 0 .9-.3 1-.8l.7-4.4c.1-.5.5-.8 1-.8h2.1c4.3 0 6.8-2.1 7.5-6.2.3-1.8 0-3.2-.8-4.2-.9-1.1-2.5-1.7-4.1-1.7zm.8 6.1c-.4 2.4-2.2 2.4-3.9 2.4h-1l.7-4.4c0-.3.3-.5.6-.5h.5c1.2 0 2.3 0 2.9.7.4.4.5 1 .2 1.8z" fill="#003087"/>
-              <path d="M66.5 13.4h-3.2c-.3 0-.6.2-.6.5l-.2.9-.2-.3c-.7-1-2.3-1.4-3.8-1.4-3.6 0-6.7 2.7-7.3 6.5-.3 1.9.1 3.7 1.2 5 1 1.2 2.4 1.7 4.1 1.7 2.9 0 4.5-1.9 4.5-1.9l-.2.9c-.1.4.2.7.6.7h2.9c.5 0 .9-.3 1-.8l1.7-10.7c.1-.5-.2-.8-.5-.1zm-4.4 6.3c-.3 1.8-1.7 3-3.5 3-1 0-1.7-.3-2.2-.9-.5-.6-.7-1.4-.5-2.3.3-1.8 1.7-3 3.5-3 .9 0 1.7.3 2.2.9.5.7.6 1.5.5 2.3z" fill="#003087"/>
-              <path d="M84.6 13.4h-3.2c-.4 0-.7.2-.9.5l-5.1 7.5-2.2-7.2c-.1-.5-.6-.8-1-.8H69c-.4 0-.7.4-.6.8l4.1 12-3.9 5.5c-.3.4 0 .9.5.9h3.2c.4 0 .7-.2.9-.5l12.4-17.9c.3-.4 0-.8-.5-.8z" fill="#003087"/>
-              <path d="M95.7 7.4h-6.6c-.5 0-.9.3-1 .8l-2.6 16.6c-.1.4.2.7.6.7h3.4c.3 0 .6-.2.7-.5l.7-4.7c.1-.5.5-.8 1-.8h2.1c4.3 0 6.8-2.1 7.5-6.2.3-1.8 0-3.2-.8-4.2-.9-1.1-2.4-1.7-4-1.7zm.8 6.1c-.4 2.4-2.2 2.4-3.9 2.4h-1l.7-4.4c0-.3.3-.5.6-.5h.5c1.2 0 2.3 0 2.9.7.3.4.4 1 .2 1.8z" fill="#009cde"/>
-              <path d="M115.9 13.4h-3.2c-.3 0-.6.2-.6.5l-.2.9-.2-.3c-.7-1-2.3-1.4-3.8-1.4-3.6 0-6.7 2.7-7.3 6.5-.3 1.9.1 3.7 1.2 5 1 1.2 2.4 1.7 4.1 1.7 2.9 0 4.5-1.9 4.5-1.9l-.2.9c-.1.4.2.7.6.7h2.9c.5 0 .9-.3 1-.8l1.7-10.7c.1-.5-.2-.8-.5-.1zm-4.5 6.3c-.3 1.8-1.7 3-3.5 3-1 0-1.7-.3-2.2-.9-.5-.6-.7-1.4-.5-2.3.3-1.8 1.7-3 3.5-3 .9 0 1.7.3 2.2.9.5.7.6 1.5.5 2.3z" fill="#009cde"/>
-              <path d="M120.3 7.8l-2.6 16.9c-.1.4.2.7.6.7h2.8c.5 0 .9-.3 1-.8l2.6-16.6c.1-.4-.2-.7-.6-.7h-3.2c-.3 0-.5.2-.6.5z" fill="#009cde"/>
-            </svg>
-            <span>Pay in 4 interest-free payments of ${(total / 4).toFixed(2)}.</span>
-            <a className="text-[#009cde] cursor-pointer hover:underline" style={{ fontWeight: 600 }}>Learn more</a>
-          </div>
-        </div>
-      )}
-
       {/* Rewards */}
       {showRewards && rewards.length > 0 && (
         <div className="mt-3 bg-[#f9e8eb] rounded-lg p-2.5">
