@@ -459,12 +459,19 @@ export function CartPage() {
         >
           <ET k="cart.checkoutBtn" />
         </button>
-        <button
-          className="w-full bg-[#009cde] text-white py-3 rounded-full border-none cursor-pointer flex items-center justify-center gap-2 transition-colors hover:bg-[#007ab8] mt-2"
-          style={{ fontSize: '15px', fontWeight: 700 }}
-        >
-          <span style={{ fontWeight: 800, fontSize: '16px' }}><ET k="cart.paypalLabel" /></span> <ET k="cart.paypalBuyNow" />
-        </button>
+        {/* PayPal — text only, matching desktop style */}
+        <div className="text-center mt-2">
+          <div className="flex items-center justify-center gap-1 mb-0.5">
+            <span style={{ fontSize: '15px', fontWeight: 900, fontStyle: 'italic', fontFamily: "'DM Sans', sans-serif", WebkitTextStroke: '0.4px currentColor' }}>
+              <span style={{ color: '#003087' }}>Pay</span><span style={{ color: '#009cde' }}>Pal</span>
+            </span>
+            <span style={{ fontSize: '14px', fontWeight: 400, color: '#1a1a1a', marginLeft: '3px', fontFamily: "'DM Sans', sans-serif" }}>Checkout</span>
+          </div>
+          <div className="flex items-center justify-center gap-2 flex-nowrap" style={{ whiteSpace: 'nowrap', fontSize: '12px', color: '#333' }}>
+            <span style={{ whiteSpace: 'nowrap' }}>Pay in 4 interest-free payments of ${(cart.getTotal() / 4).toFixed(2)}.</span>
+            <a className="cursor-pointer hover:underline flex-shrink-0" style={{ color: '#009cde', fontWeight: 600, whiteSpace: 'nowrap' }}>Learn more</a>
+          </div>
+        </div>
       </div>
     </div>
   );
